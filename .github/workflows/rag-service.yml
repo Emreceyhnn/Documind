@@ -1,4 +1,4 @@
-name: RAG Service CI/CD & Docker Push/Deploy
+name: RAG Service CI/CD & Deploy
 
 on:
   push:
@@ -9,10 +9,6 @@ on:
     branches: [ main, master ]
     paths:
       - 'RAG.service/**'
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: emreceyhnn/documind-rag-service
 
 jobs:
   build:
@@ -33,25 +29,27 @@ jobs:
       - name: Build RAG Service
         run: dotnet build RAG.service/RAG.service.csproj --configuration Release --no-restore
 
-  build-and-push:
-    name: Build & Push Docker Image
+  publish-and-deploy:
+    name: Docker Publish & Deploy to VPS
     needs: build
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Log in to GitHub Container Registry
+      - name: Deploy edilecek immutable image tag'ini hesapla
+        id: image
+        run: |
+          echo "sha_short=${GITHUB_SHA:0:7}" >> "$GITHUB_OUTPUT"
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+
+      - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -59,23 +57,40 @@ jobs:
           context: ./RAG.service
           file: ./RAG.service/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          tags: |
+            emrecyhn/documind-rag-service:${{ steps.image.outputs.sha_short }}
+            emrecyhn/documind-rag-service:latest
 
-  deploy:
-    name: Deploy to VPS
-    needs: build-and-push
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-    runs-on: ubuntu-latest
-    steps:
-      - name: SSH Deploy to VPS
+      - name: SSH and Deploy on VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_SSH_PORT || 22 }}
+          envs: IMAGE_TAG,PRODUCTION_ENV_FILE
           script: |
-            cd ${{ secrets.VPS_TARGET_DIR || '~/Documind' }}
-            docker compose pull rag-service
+            set -e
+            cd ${{ secrets.VPS_TARGET_DIR || '/home/documind' }}
+
+            printf '%s' "$PRODUCTION_ENV_FILE" > .env
+
+            docker pull emrecyhn/documind-rag-service:${IMAGE_TAG}
+            docker tag emrecyhn/documind-rag-service:${IMAGE_TAG} emrecyhn/documind-rag-service:latest
             docker compose up -d rag-service
             docker image prune -f
+
+            for i in $(seq 1 10); do
+              STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:5110/health" || echo "000")
+              if [ "$STATUS" = "200" ] || [ "$STATUS" = "404" ]; then
+                echo "Deploy başarılı, servis ayakta (HTTP $STATUS)."
+                exit 0
+              fi
+              echo "Bekleniyor... deneme $i (HTTP $STATUS)"
+              sleep 5
+            done
+            echo "Health check tamamlandı."
+        env:
+          IMAGE_TAG: ${{ steps.image.outputs.sha_short }}
+          PRODUCTION_ENV_FILE: ${{ secrets.PRODUCTION_ENV_FILE }}
