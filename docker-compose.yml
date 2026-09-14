@@ -40,6 +40,7 @@ services:
     build:
       context: ./Auth.Service
       dockerfile: Dockerfile
+    image: ghcr.io/emreceyhnn/documind-auth-service:latest
     container_name: documind-auth-service
     restart: unless-stopped
     environment:
@@ -61,6 +62,7 @@ services:
     build:
       context: ./RAG.service
       dockerfile: Dockerfile
+    image: ghcr.io/emreceyhnn/documind-rag-service:latest
     container_name: documind-rag-service
     restart: unless-stopped
     environment:
@@ -88,6 +90,7 @@ services:
     build:
       context: ./Document.Service
       dockerfile: Dockerfile
+    image: ghcr.io/emreceyhnn/documind-document-service:latest
     container_name: documind-document-service
     restart: unless-stopped
     environment:
@@ -119,6 +122,7 @@ services:
     build:
       context: ./documind-client
       dockerfile: Dockerfile
+    image: ghcr.io/emreceyhnn/documind-client:latest
     container_name: documind-client
     restart: unless-stopped
     environment:
