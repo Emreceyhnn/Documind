@@ -1,4 +1,4 @@
-name: Auth Service CI/CD
+name: Auth Service CI/CD & Deploy
 
 on:
   push:
@@ -14,6 +14,7 @@ on:
 
 jobs:
   build-and-test:
+    name: Build & Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -32,3 +33,21 @@ jobs:
 
       - name: Run Tests
         run: dotnet test Auth.Service.Test/Auth.Service.Test.csproj --no-build --verbosity normal
+
+  deploy:
+    name: Deploy to VPS
+    needs: build-and-test
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT || 22 }}
+          script: |
+            cd ${{ secrets.VPS_TARGET_DIR || '~/Documind' }}
+            git pull origin ${{ github.ref_name }}
+            docker compose up -d --build auth-service

@@ -1,4 +1,4 @@
-name: Document Service CI/CD
+name: Document Service CI/CD & Deploy
 
 on:
   push:
@@ -12,6 +12,7 @@ on:
 
 jobs:
   build:
+    name: Build Service
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -27,3 +28,21 @@ jobs:
 
       - name: Build Document Service
         run: dotnet build Document.Service/Document.Service.csproj --configuration Release --no-restore
+
+  deploy:
+    name: Deploy to VPS
+    needs: build
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT || 22 }}
+          script: |
+            cd ${{ secrets.VPS_TARGET_DIR || '~/Documind' }}
+            git pull origin ${{ github.ref_name }}
+            docker compose up -d --build document-service
