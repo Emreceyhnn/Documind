@@ -1,0 +1,28 @@
+# Environment & Secret files
+.env
+*.env
+*.env.*
+!.env.example
+
+# Build outputs & IDE
+bin/
+obj/
+.vs/
+.idea/
+.vscode/
+
+# Node / Client
+node_modules/
+dist/
+.next/
+*.tsbuildinfo
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS files
+.DS_Store
+Thumbs.db

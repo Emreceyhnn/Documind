@@ -1,0 +1,25 @@
+@RAG.service_HostAddress = http://localhost:5110
+
+### Ingest a document (requires Authorization: Bearer <token>)
+POST {{RAG.service_HostAddress}}/api/v1/rag/ingest
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "documentId": "00000000-0000-0000-0000-000000000000",
+  "filePath": "C:/path/to/file.pdf"
+}
+
+###
+
+### Query the RAG index
+POST {{RAG.service_HostAddress}}/api/v1/rag/query
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "query": "example question",
+  "topK": 5
+}
+
+###

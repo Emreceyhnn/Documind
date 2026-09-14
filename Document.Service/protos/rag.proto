@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option csharp_namespace = "RAG.service.Grpc";
+
+service RagIngest {
+    rpc Ingest(IngestRequest) returns (IngestResponse);
+    rpc DeleteDocument(DeleteDocumentRequest) returns (DeleteDocumentResponse);
+}
+
+message IngestRequest {
+    string document_id = 1;
+    string storage_key = 2;
+    string company_id = 3;
+}
+
+message IngestResponse {
+    string document_id = 1;
+    int32 chunk_count = 2;
+}
+
+message DeleteDocumentRequest {
+    string document_id = 1;
+}
+
+message DeleteDocumentResponse {
+    string document_id = 1;
+    int32 deleted_chunk_count = 2;
+}
