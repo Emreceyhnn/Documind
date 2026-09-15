@@ -12,12 +12,11 @@ export function createAuthorizedClient(
   baseUrlEnvKey: string,
   refreshSession: () => Promise<string | null>
 ) {
-  const baseUrl = requireServerEnv(baseUrlEnvKey);
-
   return async function authorizedFetch(
     path: string,
     init: RequestInit = {}
   ): Promise<Response> {
+    const baseUrl = requireServerEnv(baseUrlEnvKey);
     const accessToken = await getAccessToken();
 
     const doFetch = (token: string | null) =>
