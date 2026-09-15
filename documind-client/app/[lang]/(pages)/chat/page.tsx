@@ -18,13 +18,14 @@ export default function ChatPage() {
   const { documents, uploading, upload } = useDocuments();
   const [draft, setDraft] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const canSend = draft.trim().length > 0 && !sending;
 
   const readyCount = documents.filter((d) => d.status === "ready").length;
+  const hasReadyDocuments = readyCount > 0;
+  const canSend = hasReadyDocuments && draft.trim().length > 0 && !sending;
 
   function handleSend() {
     const text = draft.trim();
-    if (!text || sending) return;
+    if (!text || sending || !hasReadyDocuments) return;
     send(text);
     setDraft("");
   }
@@ -160,12 +161,14 @@ export default function ChatPage() {
             >
               <TextField
                 variant="standard"
-                placeholder={t("inputPlaceholder")}
+                placeholder={
+                  hasReadyDocuments ? t("inputPlaceholder") : t("inputPlaceholderNoDocuments")
+                }
                 fullWidth
                 multiline
                 maxRows={6}
                 value={draft}
-                disabled={sending}
+                disabled={sending || !hasReadyDocuments}
                 onChange={(e) => setDraft(e.target.value)}
                 onKeyDown={handleKeyDown}
                 slotProps={{

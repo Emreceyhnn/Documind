@@ -1,4 +1,16 @@
 {
+  "Legal": {
+    "terms": {
+      "title": "Terms of Service",
+      "lastUpdated": "Last updated: this content is being finalized.",
+      "body": "DocuMind's Terms of Service are currently being drafted. By using the service, you agree that the final terms will apply once published.\n\nFor questions, please contact our support team."
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "lastUpdated": "Last updated: this content is being finalized.",
+      "body": "DocuMind's Privacy Policy is currently being drafted. Until the final policy is published, your data is processed solely to provide the service.\n\nFor questions, please contact our support team."
+    }
+  },
   "Meta": {
     "signIn": {
       "title": "Sign In",
@@ -77,6 +89,8 @@
     "emailPlaceholder": "you@company.com",
     "passwordLabel": "Password",
     "passwordPlaceholder": "Your password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "forgotPassword": "Forgot password",
     "submit": "Log In",
     "or": "or",
@@ -100,6 +114,8 @@
     "emailPlaceholder": "elif.kaya@acme.com",
     "passwordLabel": "Password",
     "passwordPlaceholder": "At least 8 characters",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "passwordStrengthWeak": "Weak",
     "passwordStrengthMedium": "Medium",
     "passwordStrengthStrong": "Strong",
@@ -170,6 +186,7 @@
     "sourcesHeading": "Sources",
     "thinking": "Scanning sources…",
     "inputPlaceholder": "Ask a question about your documents…",
+    "inputPlaceholderNoDocuments": "Upload a document before asking a question",
     "emptyState": "Ask a question to start the conversation.",
     "send": "Send",
     "disclaimer": "Answers are generated only from your uploaded documents and include page references.",

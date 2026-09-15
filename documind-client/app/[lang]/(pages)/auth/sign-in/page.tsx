@@ -6,11 +6,15 @@ import {
   Box,
   Button,
   Divider,
+  IconButton,
+  InputAdornment,
   Stack,
   TextField,
   Typography,
   useTheme,
 } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +33,7 @@ export default function SignInPage() {
 
   const [ssoOpen, setSsoOpen] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const schema = useMemo(() => buildSignInSchema(tErrors), [tErrors]);
   const {
@@ -126,11 +131,31 @@ export default function SignInPage() {
                 </Typography>
               </Stack>
               <TextField
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder={t("passwordPlaceholder")}
                 fullWidth
                 error={!!errors.password}
                 helperText={errors.password?.message}
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => setShowPassword((v) => !v)}
+                          edge="end"
+                          size="small"
+                          aria-label={showPassword ? t("hidePassword") : t("showPassword")}
+                        >
+                          {showPassword ? (
+                            <VisibilityOffIcon fontSize="small" />
+                          ) : (
+                            <VisibilityIcon fontSize="small" />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
                 {...register("password")}
               />
             </Box>

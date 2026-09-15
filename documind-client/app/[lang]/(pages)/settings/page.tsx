@@ -108,12 +108,29 @@ export default function SettingsPage() {
     }
   }
 
-  async function handleCopyCompanyId() {
+  function handleCopyCompanyId() {
     if (!user?.companyId) return;
-    try {
-      await navigator.clipboard.writeText(user.companyId);
+
+    const markCopied = () => {
       setCompanyIdCopied(true);
       setTimeout(() => setCompanyIdCopied(false), 2000);
+    };
+
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(user.companyId).then(markCopied, () => {});
+      return;
+    }
+
+    try {
+      const textarea = document.createElement("textarea");
+      textarea.value = user.companyId;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      markCopied();
     } catch {}
   }
 

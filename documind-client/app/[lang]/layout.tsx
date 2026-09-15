@@ -85,10 +85,6 @@ export const metadata: Metadata = {
     images: ["/og-image.jpg"],
     creator: "@documind",
   },
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-  },
 };
 
 export function generateStaticParams() {

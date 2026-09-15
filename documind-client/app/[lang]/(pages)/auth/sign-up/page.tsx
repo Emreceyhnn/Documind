@@ -7,6 +7,8 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
+  IconButton,
+  InputAdornment,
   Stack,
   TextField,
   ToggleButton,
@@ -14,6 +16,8 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -56,6 +60,7 @@ export default function SignUpPage() {
   };
 
   const [formError, setFormError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [pendingInvite, setPendingInvite] = useState<{
     companyId: string;
     companyName: string;
@@ -74,7 +79,7 @@ export default function SignUpPage() {
       fullName: "",
       email: "",
       password: "",
-      termsAccepted: true,
+      termsAccepted: false,
       companyMode: "create",
       newCompanyName: "",
       companyId: "",
@@ -223,13 +228,33 @@ export default function SignUpPage() {
 
             <Box>
               <TextField
-                type="password"
+                type={showPassword ? "text" : "password"}
                 label={t("passwordLabel")}
                 placeholder={t("passwordPlaceholder")}
                 fullWidth
                 error={!!errors.password}
                 helperText={errors.password?.message}
-                slotProps={{ inputLabel: { shrink: true } }}
+                slotProps={{
+                  inputLabel: { shrink: true },
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => setShowPassword((v) => !v)}
+                          edge="end"
+                          size="small"
+                          aria-label={showPassword ? t("hidePassword") : t("showPassword")}
+                        >
+                          {showPassword ? (
+                            <VisibilityOffIcon fontSize="small" />
+                          ) : (
+                            <VisibilityIcon fontSize="small" />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
                 {...register("password")}
               />
               <Stack direction="row" spacing={1.25} sx={{ alignItems: "center", mt: 1.125 }}>
@@ -313,36 +338,43 @@ export default function SignUpPage() {
               control={
                 <Checkbox
                   {...register("termsAccepted")}
-                  defaultChecked
                   sx={{ p: 0, mr: 1.25, mt: 0.25, color: "borderStrong" }}
                 />
               }
               label={
                 <Typography sx={{ fontSize: 13, lineHeight: 1.55, color: "text.secondary" }}>
                   {t("termsPrefix")}{" "}
-                  <Box
-                    component="a"
-                    href="#"
-                    sx={{
-                      color: "primary.light",
-                      textDecoration: "none",
-                      "&:hover": { color: "primary.dark", textDecoration: "underline" },
-                    }}
+                  <Link
+                    href="/legal/terms"
+                    target="_blank"
+                    style={{ color: "inherit" }}
                   >
-                    {t("termsLink")}
-                  </Box>{" "}
+                    <Box
+                      component="span"
+                      sx={{
+                        color: "primary.light",
+                        "&:hover": { color: "primary.dark", textDecoration: "underline" },
+                      }}
+                    >
+                      {t("termsLink")}
+                    </Box>
+                  </Link>{" "}
                   {t("termsMiddle")}{" "}
-                  <Box
-                    component="a"
-                    href="#"
-                    sx={{
-                      color: "primary.light",
-                      textDecoration: "none",
-                      "&:hover": { color: "primary.dark", textDecoration: "underline" },
-                    }}
+                  <Link
+                    href="/legal/privacy"
+                    target="_blank"
+                    style={{ color: "inherit" }}
                   >
-                    {t("privacyLink")}
-                  </Box>{" "}
+                    <Box
+                      component="span"
+                      sx={{
+                        color: "primary.light",
+                        "&:hover": { color: "primary.dark", textDecoration: "underline" },
+                      }}
+                    >
+                      {t("privacyLink")}
+                    </Box>
+                  </Link>{" "}
                   {t("termsSuffix")}
                 </Typography>
               }

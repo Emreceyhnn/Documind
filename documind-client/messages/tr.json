@@ -2,6 +2,18 @@
   "Brand": {
     "name": "DocuMind"
   },
+  "Legal": {
+    "terms": {
+      "title": "Kullanım Koşulları",
+      "lastUpdated": "Son güncelleme: bu içerik hazırlık aşamasındadır.",
+      "body": "DocuMind kullanım koşulları şu anda hazırlanmaktadır. Hizmeti kullanarak, nihai koşulların yayınlandığında geçerli olacağını kabul edersiniz.\n\nSorularınız için destek ekibimizle iletişime geçebilirsiniz."
+    },
+    "privacy": {
+      "title": "Gizlilik Politikası",
+      "lastUpdated": "Son güncelleme: bu içerik hazırlık aşamasındadır.",
+      "body": "DocuMind gizlilik politikası şu anda hazırlanmaktadır. Verileriniz, nihai politika yayınlanana kadar yalnızca hizmetin sunulması amacıyla işlenir.\n\nSorularınız için destek ekibimizle iletişime geçebilirsiniz."
+    }
+  },
   "Meta": {
     "signIn": {
       "title": "Giriş Yap",
@@ -77,6 +89,8 @@
     "emailPlaceholder": "ornek@sirket.com",
     "passwordLabel": "Şifre",
     "passwordPlaceholder": "Şifreniz",
+    "showPassword": "Şifreyi göster",
+    "hidePassword": "Şifreyi gizle",
     "forgotPassword": "Şifremi unuttum",
     "submit": "Giriş Yap",
     "or": "veya",
@@ -100,6 +114,8 @@
     "emailPlaceholder": "elif.kaya@acme.com",
     "passwordLabel": "Şifre",
     "passwordPlaceholder": "En az 8 karakter",
+    "showPassword": "Şifreyi göster",
+    "hidePassword": "Şifreyi gizle",
     "passwordStrengthWeak": "Zayıf",
     "passwordStrengthMedium": "Orta",
     "passwordStrengthStrong": "Güçlü",
@@ -170,6 +186,7 @@
     "sourcesHeading": "Kaynaklar",
     "thinking": "Kaynaklar taranıyor…",
     "inputPlaceholder": "Dokümanlarınıza bir soru sorun…",
+    "inputPlaceholderNoDocuments": "Soru sormadan önce bir doküman yükleyin",
     "emptyState": "Sohbete başlamak için bir soru sorun.",
     "send": "Gönder",
     "disclaimer": "Cevaplar yalnızca yüklediğiniz dokümanlardan üretilir ve sayfa referansı içerir.",
