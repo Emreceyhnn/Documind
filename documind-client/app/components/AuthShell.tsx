@@ -1,6 +1,7 @@
 import { Box, Stack } from "@mui/material";
 import type { ReactNode } from "react";
 import Logo from "./Logo";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 interface AuthShellProps {
   children: ReactNode;
@@ -25,6 +26,7 @@ export default function AuthShell({
           alignItems: "safe center",
           justifyContent: "center",
           overflowY: "auto",
+          position: "relative",
           px: 3,
           py: { xs: 4, sm: 6 },
           background: gradient
@@ -39,6 +41,10 @@ export default function AuthShell({
             : {},
       ]}
     >
+      <Box sx={{ position: "absolute", top: 20, right: 24 }}>
+        <LanguageSwitcher variant="button" />
+      </Box>
+
       <Box sx={{ width: "100%", maxWidth }}>
         <Stack sx={{ alignItems: "center", mb: 3.5 }}>
           <Logo size="medium" />

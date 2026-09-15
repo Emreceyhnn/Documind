@@ -136,6 +136,8 @@
     "teamInviteSubmit": "Ekle",
     "teamInviteSuccess": "Üye şirkete eklendi.",
     "teamInviteError": "Üye eklenemedi. Lütfen tekrar deneyin.",
-    "teamMissingCompanyError": "Şirket bilginiz bulunamadı."
+    "teamMissingCompanyError": "Şirket bilginiz bulunamadı.",
+    "languageHeading": "Dil Tercihi",
+    "languageSubtitle": "Uygulama arayüz dilini değiştirmek için tercih ettiğiniz dili seçin."
   }
 }

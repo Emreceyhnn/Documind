@@ -15,6 +15,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import Sidebar from "@/app/components/Sidebar";
+import LanguageSwitcher from "@/app/components/LanguageSwitcher";
 import { useAuth } from "@/app/lib/hooks/useAuth";
 import { updateUser, deleteUser } from "@/app/lib/api/auth";
 import { addCompanyMember } from "@/app/lib/api/company";
@@ -256,6 +257,27 @@ export default function SettingsPage() {
                 </Stack>
               </Box>
             </Stack>
+          </Box>
+
+          <Box
+            sx={{
+              mt: 3,
+              bgcolor: "background.paper",
+              border: "1px solid",
+              borderColor: "divider",
+              borderRadius: "10px",
+              p: 3.5,
+              boxShadow: "0 1px 2px rgba(15,18,34,0.06)",
+            }}
+          >
+            <Typography sx={{ fontSize: 15, fontWeight: 600, mb: 0.75 }}>
+              {t("languageHeading")}
+            </Typography>
+            <Typography sx={{ fontSize: 13, color: "text.secondary", mb: 2 }}>
+              {t("languageSubtitle")}
+            </Typography>
+
+            <LanguageSwitcher variant="pill" />
           </Box>
 
           <Box

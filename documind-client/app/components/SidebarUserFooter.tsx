@@ -8,6 +8,7 @@ import { useRouter } from "@/i18n/navigation";
 import { useAuth } from "@/app/lib/hooks/useAuth";
 import { useThemeMode } from "@/app/lib/hooks/useThemeMode";
 import { SIDEBAR_BORDER } from "@/app/lib/sidebarColors";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 interface SidebarUserFooterProps {
   variant: "dark" | "light";
@@ -83,6 +84,7 @@ export default function SidebarUserFooter({ variant }: SidebarUserFooterProps) {
             {user.email}
           </Typography>
         </Box>
+        <LanguageSwitcher variant="pill" isDark={isDark} />
         <Tooltip title={mode === "dark" ? t("lightMode") : t("darkMode")}>
           <IconButton
             onClick={toggleMode}

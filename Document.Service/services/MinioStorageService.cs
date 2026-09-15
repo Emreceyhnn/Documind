@@ -30,6 +30,13 @@ public class MinioStorageService : IStorageService
     {
         try
         {
+            var bucketExists = await Amazon.S3.Util.AmazonS3Util.DoesS3BucketExistV2Async(_s3Client, _bucketName);
+            if (!bucketExists)
+            {
+                _logger.LogInformation("Creating MinIO bucket {BucketName}", _bucketName);
+                await _s3Client.PutBucketAsync(new PutBucketRequest { BucketName = _bucketName }, cancellationToken);
+            }
+
             var request = new PutObjectRequest
             {
                 BucketName = _bucketName,

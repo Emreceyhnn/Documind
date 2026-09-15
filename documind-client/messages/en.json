@@ -136,6 +136,8 @@
     "teamInviteSubmit": "Add",
     "teamInviteSuccess": "Member added to the company.",
     "teamInviteError": "Could not add the member. Please try again.",
-    "teamMissingCompanyError": "Your company information could not be found."
+    "teamMissingCompanyError": "Your company information could not be found.",
+    "languageHeading": "Language Preference",
+    "languageSubtitle": "Select your preferred language to change the interface language."
   }
 }
