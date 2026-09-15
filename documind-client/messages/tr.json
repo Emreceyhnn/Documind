@@ -2,6 +2,28 @@
   "Brand": {
     "name": "DocuMind"
   },
+  "Meta": {
+    "signIn": {
+      "title": "Giriş Yap",
+      "description": "DocuMind platformuna güvenli giriş yapın."
+    },
+    "signUp": {
+      "title": "Kayıt Ol",
+      "description": "DocuMind ile yapay zeka destekli doküman analizine ücretsiz başlayın."
+    },
+    "chat": {
+      "title": "Yapay Zeka Sohbeti",
+      "description": "Dokümanlarınızla sohbet edin, yapay zeka ile anında kaynak gösterimli yanıtlar alın."
+    },
+    "docs": {
+      "title": "Dokümanlarım",
+      "description": "Yüklenen dokümanlarınızı yönetin, PDF ve Word dosyalarını analiz için sisteme ekleyin."
+    },
+    "settings": {
+      "title": "Ayarlar",
+      "description": "Profil bilgilerinizi, şirket hesabınızı ve ekip üyelerini yönetin."
+    }
+  },
   "Nav": {
     "login": "Giriş",
     "register": "Kayıt",
@@ -27,6 +49,19 @@
     "accountInactive": "Bu hesap pasif durumda.",
     "sessionExpired": "Oturumunuzun süresi doldu. Lütfen tekrar giriş yapın.",
     "userNotFound": "Kullanıcı bulunamadı.",
+    "networkFailed": "Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin.",
+    "loginFailed": "Giriş yapılamadı. Lütfen e-posta adresinizi ve şifrenizi kontrol edin.",
+    "registrationFailed": "Kayıt yapılamadı. Lütfen e-posta adresinizi ve şifrenizi kontrol edin.",
+    "updateUserFailed": "Kullanıcı bilgileri güncellenemedi. Lütfen tekrar deneyin.",
+    "deleteUserFailed": "Kullanıcı bilgileri silinemedi. Lütfen tekrar deneyin.",
+    "loadDocumentsFailed": "Dokümanlar yüklenemedi.",
+    "uploadDocumentFailed": "Doküman yüklenemedi.",
+    "deleteDocumentFailed": "Doküman silinemedi.",
+    "openDocumentFailed": "Doküman açılamadı.",
+    "chatQueryFailed": "Cevap alınamadı.",
+    "loadCompanyFailed": "Şirket bilgileri alınamadı.",
+    "addMemberFailed": "Üye eklenemedi.",
+    "removeMemberFailed": "Üye kaldırılamadı.",
     "fullNameRequired": "Lütfen ad ve soyadınızı girin.",
     "termsRequired": "Devam etmek için kullanım koşullarını kabul etmelisiniz.",
     "newCompanyNameRequired": "Şirket adı zorunludur.",
@@ -137,7 +172,8 @@
     "inputPlaceholder": "Dokümanlarınıza bir soru sorun…",
     "emptyState": "Sohbete başlamak için bir soru sorun.",
     "send": "Gönder",
-    "disclaimer": "Cevaplar yalnızca yüklediğiniz dokümanlardan üretilir ve sayfa referansı içerir."
+    "disclaimer": "Cevaplar yalnızca yüklediğiniz dokümanlardan üretilir ve sayfa referansı içerir.",
+    "sourceChunkName": "Doküman parçası #{index}"
   },
   "Settings": {
     "title": "Ayarlar",

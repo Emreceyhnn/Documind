@@ -41,9 +41,10 @@ export function createAuthorizedClient(
   };
 }
 
-export async function parseErrorResponse<
-  T extends { message?: string; title?: string; error?: string },
->(response: Response, fallbackMessage: string): Promise<never> {
+export async function parseErrorResponse(
+  response: Response,
+  fallbackMessage: string
+): Promise<never> {
   const message = await extractErrorMessage(response, fallbackMessage);
   throw new Error(message);
 }

@@ -1,4 +1,26 @@
 {
+  "Meta": {
+    "signIn": {
+      "title": "Sign In",
+      "description": "Securely sign in to the DocuMind platform."
+    },
+    "signUp": {
+      "title": "Sign Up",
+      "description": "Start AI-powered document analysis with DocuMind for free."
+    },
+    "chat": {
+      "title": "AI Chat",
+      "description": "Chat with your documents and get instant, cited answers powered by AI."
+    },
+    "docs": {
+      "title": "My Documents",
+      "description": "Manage your uploaded documents and add PDF or Word files for analysis."
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Manage your profile, company account, and team members."
+    }
+  },
   "Brand": {
     "name": "DocuMind"
   },
@@ -27,6 +49,19 @@
     "accountInactive": "This account is inactive.",
     "sessionExpired": "Your session has expired. Please sign in again.",
     "userNotFound": "User not found.",
+    "networkFailed": "Could not connect to the server. Please check your internet connection.",
+    "loginFailed": "Login failed. Please check your email and password.",
+    "registrationFailed": "Registration failed. Please check your email and password.",
+    "updateUserFailed": "Could not update user information. Please try again.",
+    "deleteUserFailed": "Could not delete user account. Please try again.",
+    "loadDocumentsFailed": "Could not load documents.",
+    "uploadDocumentFailed": "Could not upload document.",
+    "deleteDocumentFailed": "Could not delete document.",
+    "openDocumentFailed": "Could not open document.",
+    "chatQueryFailed": "Could not get an answer.",
+    "loadCompanyFailed": "Could not load company information.",
+    "addMemberFailed": "Could not add member.",
+    "removeMemberFailed": "Could not remove member.",
     "fullNameRequired": "Please enter your full name.",
     "termsRequired": "You must accept the terms to continue.",
     "newCompanyNameRequired": "Company name is required.",
@@ -137,7 +172,8 @@
     "inputPlaceholder": "Ask a question about your documents…",
     "emptyState": "Ask a question to start the conversation.",
     "send": "Send",
-    "disclaimer": "Answers are generated only from your uploaded documents and include page references."
+    "disclaimer": "Answers are generated only from your uploaded documents and include page references.",
+    "sourceChunkName": "Document excerpt #{index}"
   },
   "Settings": {
     "title": "Settings",

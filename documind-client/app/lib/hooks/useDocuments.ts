@@ -1,13 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   deleteDocument,
   getDocumentDownloadUrl,
   listDocuments,
   uploadDocument,
 } from "@/app/lib/api/documents";
+import { translateServerMessage } from "@/app/lib/api/errorMessages";
 import type { DocumentApi } from "@/app/lib/type/documents";
 import type { DocumentItem } from "@/app/lib/type/ui";
 
@@ -32,6 +33,7 @@ function toDocumentItem(doc: DocumentApi, locale: string): DocumentItem {
 
 export function useDocuments() {
   const locale = useLocale();
+  const tErrors = useTranslations("Errors");
   const [documents, setDocuments] = useState<DocumentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,15 +46,42 @@ export function useDocuments() {
       const data = await listDocuments();
       setDocuments(data.map((doc) => toDocumentItem(doc, locale)));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Dokümanlar yüklenemedi.");
+      setError(
+        err instanceof Error
+          ? translateServerMessage(err.message, tErrors)
+          : tErrors("loadDocumentsFailed")
+      );
     } finally {
       setLoading(false);
     }
-  }, [locale]);
+  }, [locale, tErrors]);
 
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+    let cancelled = false;
+
+    (async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await listDocuments();
+        if (!cancelled) setDocuments(data.map((doc) => toDocumentItem(doc, locale)));
+      } catch (err) {
+        if (!cancelled) {
+          setError(
+            err instanceof Error
+              ? translateServerMessage(err.message, tErrors)
+              : tErrors("loadDocumentsFailed")
+          );
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [locale, tErrors]);
 
   const upload = useCallback(
     async (file: File) => {
@@ -64,29 +93,40 @@ export function useDocuments() {
         await uploadDocument(formData);
         await refresh();
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Doküman yüklenemedi.");
+        setError(
+          err instanceof Error
+            ? translateServerMessage(err.message, tErrors)
+            : tErrors("uploadDocumentFailed")
+        );
         throw err;
       } finally {
         setUploading(false);
       }
     },
-    [refresh]
+    [refresh, tErrors]
   );
 
   const getDownloadUrl = useCallback((documentId: string) => {
     return getDocumentDownloadUrl(documentId);
   }, []);
 
-  const remove = useCallback(async (documentId: string) => {
-    setError(null);
-    try {
-      await deleteDocument(documentId);
-      setDocuments((prev) => prev.filter((doc) => doc.id !== documentId));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Doküman silinemedi.");
-      throw err;
-    }
-  }, []);
+  const remove = useCallback(
+    async (documentId: string) => {
+      setError(null);
+      try {
+        await deleteDocument(documentId);
+        setDocuments((prev) => prev.filter((doc) => doc.id !== documentId));
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? translateServerMessage(err.message, tErrors)
+            : tErrors("deleteDocumentFailed")
+        );
+        throw err;
+      }
+    },
+    [tErrors]
+  );
 
   return { documents, loading, error, uploading, upload, refresh, getDownloadUrl, remove };
 }

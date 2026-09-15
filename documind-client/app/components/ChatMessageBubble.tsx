@@ -1,5 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { useTranslations } from "next-intl";
+import { useAuth } from "@/app/lib/hooks/useAuth";
 import type { ChatMessage } from "../lib/type/ui";
 import SourceCard from "./SourceCard";
 
@@ -9,6 +10,10 @@ interface ChatMessageBubbleProps {
 
 export default function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
   const t = useTranslations("Chat");
+  const { user } = useAuth();
+  const initials = user
+    ? `${user.name?.[0] ?? ""}${user.surname?.[0] ?? ""}`.toUpperCase()
+    : "";
 
   if (message.role === "user") {
     return (
@@ -43,7 +48,7 @@ export default function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
             justifyContent: "center",
           }}
         >
-          EK
+          {initials}
         </Box>
       </Stack>
     );

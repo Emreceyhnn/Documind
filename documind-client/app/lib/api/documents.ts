@@ -15,13 +15,11 @@ export async function listDocuments(): Promise<DocumentApi[]> {
   try {
     response = await authorizedDocumentFetch("/api/v1/documents");
   } catch {
-    throw new Error(
-      "Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin."
-    );
+    throw new Error("Network connection failed.");
   }
 
   if (!response.ok) {
-    await parseErrorResponse(response, "Dokümanlar yüklenemedi.");
+    await parseErrorResponse(response, "Could not load documents.");
   }
 
   return (await response.json()) as DocumentApi[];
@@ -37,13 +35,11 @@ export async function uploadDocument(
       body: formData,
     });
   } catch {
-    throw new Error(
-      "Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin."
-    );
+    throw new Error("Network connection failed.");
   }
 
   if (!response.ok) {
-    await parseErrorResponse(response, "Doküman yüklenemedi.");
+    await parseErrorResponse(response, "Could not upload document.");
   }
 
   return (await response.json()) as UploadDocumentResultApi;
@@ -56,13 +52,11 @@ export async function deleteDocument(documentId: string): Promise<void> {
       method: "DELETE",
     });
   } catch {
-    throw new Error(
-      "Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin."
-    );
+    throw new Error("Network connection failed.");
   }
 
   if (!response.ok) {
-    await parseErrorResponse(response, "Doküman silinemedi.");
+    await parseErrorResponse(response, "Could not delete document.");
   }
 }
 
@@ -75,13 +69,11 @@ export async function getDocumentDownloadUrl(
       `/api/v1/documents/${documentId}/download-url`
     );
   } catch {
-    throw new Error(
-      "Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin."
-    );
+    throw new Error("Network connection failed.");
   }
 
   if (!response.ok) {
-    await parseErrorResponse(response, "Doküman açılamadı.");
+    await parseErrorResponse(response, "Could not open document.");
   }
 
   const data = (await response.json()) as DownloadUrlResultApi;

@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
+import type { Locale } from "@/i18n/routing";
 
-export const metadata: Metadata = {
-  title: "Ayarlar",
-  description:
-    "Profil bilgilerinizi, şirket hesabınızı ve ekip üyelerini yönetin.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: Locale }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const t = await getTranslations({ locale: lang, namespace: "Meta.settings" });
+  return { title: t("title"), description: t("description") };
+}
 
 export default function SettingsLayout({
   children,

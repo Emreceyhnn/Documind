@@ -9,9 +9,11 @@ import DocumentRow from "@/app/components/DocumentRow";
 import DocumentRowSkeleton from "@/app/components/DocumentRowSkeleton";
 import EmptyDocsIllustration from "@/app/components/EmptyDocsIllustration";
 import { useDocuments } from "@/app/lib/hooks/useDocuments";
+import { translateServerMessage } from "@/app/lib/api/errorMessages";
 
 export default function DocsPage() {
   const t = useTranslations("Docs");
+  const tErrors = useTranslations("Errors");
   const { documents, loading, error, uploading, upload, getDownloadUrl, remove } =
     useDocuments();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -31,7 +33,9 @@ export default function DocsPage() {
       const url = await getDownloadUrl(id);
       window.open(url, "_blank", "noopener,noreferrer");
     } catch (err) {
-      setOpenError(err instanceof Error ? err.message : t("openError"));
+      setOpenError(
+        err instanceof Error ? translateServerMessage(err.message, tErrors) : t("openError")
+      );
     }
   }
 

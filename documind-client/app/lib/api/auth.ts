@@ -1,7 +1,6 @@
 "use server";
 
 import {
-  ApiErrorResponseApi,
   ApiEnvelope,
   AuthActionResult,
   AuthResponseApi,
@@ -74,14 +73,14 @@ export async function login({
   } catch {
     return {
       success: false,
-      message: "Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin.",
+      message: "Network connection failed.",
     };
   }
 
   if (!response.ok) {
     const message = await extractErrorMessage(
       response,
-      "Giriş yapılamadı. Lütfen e-posta adresinizi ve şifrenizi kontrol edin."
+      "Login failed. Please check your email and password."
     );
     return { success: false, message };
   }
@@ -119,14 +118,14 @@ export async function register({
   } catch {
     return {
       success: false,
-      message: "Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin.",
+      message: "Network connection failed.",
     };
   }
 
   if (!response.ok) {
     const message = await extractErrorMessage(
       response,
-      "Kayıt yapılamadı. Lütfen e-posta adresinizi ve şifrenizi kontrol edin."
+      "Registration failed. Please check your email and password."
     );
     return { success: false, message };
   }
@@ -247,16 +246,11 @@ export async function updateUser({ name, surname }: UpdateUserInputApi) {
       body: JSON.stringify({ Name: name, Surname: surname }),
     });
   } catch {
-    throw new Error(
-      "Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin."
-    );
+    throw new Error("Network connection failed.");
   }
 
   if (!response.ok) {
-    await parseErrorResponse(
-      response,
-      "Kullanıcı bilgileri güncellenemedi. Lütfen tekrar deneyin."
-    );
+    await parseErrorResponse(response, "Could not update user information. Please try again.");
   }
 
   const envelope = (await response.json()) as ApiEnvelope<MeResponseApi>;
@@ -270,16 +264,11 @@ export async function deleteUser() {
       method: "DELETE",
     });
   } catch {
-    throw new Error(
-      "Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin."
-    );
+    throw new Error("Network connection failed.");
   }
 
   if (!response.ok) {
-    await parseErrorResponse(
-      response,
-      "Kullanıcı bilgileri silinemedi. Lütfen tekrar deneyin."
-    );
+    await parseErrorResponse(response, "Could not delete user account. Please try again.");
   }
 
   await clearSessionCookies();

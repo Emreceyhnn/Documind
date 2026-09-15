@@ -14,13 +14,11 @@ export async function getCompany(
   try {
     response = await authorizedFetch(`/api/companies/${companyId}`);
   } catch {
-    throw new Error(
-      "Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin."
-    );
+    throw new Error("Network connection failed.");
   }
 
   if (!response.ok) {
-    await parseErrorResponse(response, "Şirket bilgileri alınamadı.");
+    await parseErrorResponse(response, "Could not load company information.");
   }
 
   const envelope = (await response.json()) as ApiEnvelope<CompanyResponseApi>;
@@ -39,13 +37,11 @@ export async function addCompanyMember({
       body: JSON.stringify({ CompanyId: companyId, UserEmail: userEmail }),
     });
   } catch {
-    throw new Error(
-      "Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin."
-    );
+    throw new Error("Network connection failed.");
   }
 
   if (!response.ok) {
-    await parseErrorResponse(response, "Üye eklenemedi.");
+    await parseErrorResponse(response, "Could not add member.");
   }
 
   const envelope = (await response.json()) as ApiEnvelope<CompanyResponseApi>;
@@ -64,12 +60,10 @@ export async function removeCompanyMember(
       body: JSON.stringify({ CompanyId: companyId, UserId: userId }),
     });
   } catch {
-    throw new Error(
-      "Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin."
-    );
+    throw new Error("Network connection failed.");
   }
 
   if (!response.ok) {
-    await parseErrorResponse(response, "Üye kaldırılamadı.");
+    await parseErrorResponse(response, "Could not remove member.");
   }
 }

@@ -18,13 +18,11 @@ export async function sendChatQuery(
       body: JSON.stringify({ query, topK }),
     });
   } catch {
-    throw new Error(
-      "Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin."
-    );
+    throw new Error("Network connection failed.");
   }
 
   if (!response.ok) {
-    await parseErrorResponse(response, "Cevap alınamadı.");
+    await parseErrorResponse(response, "Could not get an answer.");
   }
 
   return (await response.json()) as QueryResultApi;
