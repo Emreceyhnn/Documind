@@ -1,10 +1,12 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Box, Stack, TextField, Typography } from "@mui/material";
+import { Alert, Box, Stack, TextField, Typography } from "@mui/material";
 import { useTranslations } from "next-intl";
 import Sidebar from "@/app/components/Sidebar";
+import Logo from "@/app/components/Logo";
 import ChatMessageBubble from "@/app/components/ChatMessageBubble";
+import ThinkingIndicator from "@/app/components/ThinkingIndicator";
 import StatusChip from "@/app/components/StatusChip";
 import UserBadge from "@/app/components/UserBadge";
 import { useChat } from "@/app/lib/hooks/useChat";
@@ -12,10 +14,11 @@ import { useDocuments } from "@/app/lib/hooks/useDocuments";
 
 export default function ChatPage() {
   const t = useTranslations("Chat");
-  const { messages, sending, send } = useChat();
+  const { messages, sending, error, send } = useChat();
   const { documents, uploading, upload } = useDocuments();
   const [draft, setDraft] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const canSend = draft.trim().length > 0 && !sending;
 
   const readyCount = documents.filter((d) => d.status === "ready").length;
 
@@ -24,6 +27,13 @@ export default function ChatPage() {
     if (!text || sending) return;
     send(text);
     setDraft("");
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
   }
 
   function handleFiles(files: FileList | null) {
@@ -51,7 +61,11 @@ export default function ChatPage() {
             boxShadow: "0 1px 3px rgba(15,18,34,0.05)",
           }}
         >
-          <UserBadge />
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Logo size="small" color="dark" clickable />
+            <Box sx={{ height: 22, width: 1, bgcolor: "divider" }} />
+            <UserBadge />
+          </Box>
           <input
             ref={inputRef}
             type="file"
@@ -97,6 +111,8 @@ export default function ChatPage() {
 
         <Box sx={{ flex: 1, overflow: "auto", px: 3.5, pt: 3.5, pb: 2.5 }}>
           <Stack sx={{ maxWidth: 780, mx: "auto", gap: 2.75 }}>
+            {error && <Alert severity="error">{error}</Alert>}
+
             {messages.length === 0 ? (
               <Typography
                 sx={{
@@ -113,11 +129,7 @@ export default function ChatPage() {
                 <ChatMessageBubble key={message.id} message={message} />
               ))
             )}
-            {sending && (
-              <Typography sx={{ fontSize: 13, color: "text.secondary", ml: 5.5 }}>
-                {t("thinking")}
-              </Typography>
-            )}
+            {sending && <ThinkingIndicator />}
           </Stack>
         </Box>
 
@@ -150,19 +162,19 @@ export default function ChatPage() {
                 variant="standard"
                 placeholder={t("inputPlaceholder")}
                 fullWidth
+                multiline
+                maxRows={6}
                 value={draft}
                 disabled={sending}
                 onChange={(e) => setDraft(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleSend();
-                }}
+                onKeyDown={handleKeyDown}
                 slotProps={{ input: { disableUnderline: true } }}
                 sx={{ flex: 1, py: 1.25 }}
               />
               <Box
                 component="button"
                 onClick={handleSend}
-                disabled={sending}
+                disabled={!canSend}
                 sx={{
                   flexShrink: 0,
                   fontFamily: "inherit",
@@ -174,10 +186,10 @@ export default function ChatPage() {
                   px: 2.5,
                   py: 1.375,
                   borderRadius: "8px",
-                  cursor: sending ? "default" : "pointer",
-                  opacity: sending ? 0.6 : 1,
+                  cursor: canSend ? "pointer" : "default",
+                  opacity: canSend ? 1 : 0.45,
                   boxShadow: "0 2px 6px rgba(79,70,229,0.28)",
-                  "&:hover": sending ? {} : { bgcolor: "primary.dark" },
+                  "&:hover": canSend ? { bgcolor: "primary.dark" } : {},
                 }}
               >
                 {t("send")}

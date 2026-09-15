@@ -34,6 +34,20 @@ builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();
 
+builder.Services.Configure<Microsoft.AspNetCore.Mvc.ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var message = context.ModelState.Values
+            .SelectMany(v => v.Errors)
+            .Select(e => e.ErrorMessage)
+            .FirstOrDefault(m => !string.IsNullOrWhiteSpace(m))
+            ?? "One or more validation errors occurred.";
+
+        return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(new { success = false, message });
+    };
+});
+
 
 var jwtSection = builder.Configuration.GetSection("JwtSettings");
 var secretKey = jwtSection["SecretKey"] 

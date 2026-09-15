@@ -4,7 +4,9 @@ import { useRef, useState } from "react";
 import { Alert, Box, Stack, Typography } from "@mui/material";
 import { useTranslations } from "next-intl";
 import Sidebar from "@/app/components/Sidebar";
+import Logo from "@/app/components/Logo";
 import DocumentRow from "@/app/components/DocumentRow";
+import DocumentRowSkeleton from "@/app/components/DocumentRowSkeleton";
 import EmptyDocsIllustration from "@/app/components/EmptyDocsIllustration";
 import { useDocuments } from "@/app/lib/hooks/useDocuments";
 
@@ -14,6 +16,8 @@ export default function DocsPage() {
     useDocuments();
   const inputRef = useRef<HTMLInputElement>(null);
   const [openError, setOpenError] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragCounter = useRef(0);
 
   function handleFiles(files: FileList | null) {
     const file = files?.[0];
@@ -57,13 +61,17 @@ export default function DocsPage() {
             boxShadow: "0 1px 3px rgba(15,18,34,0.05)",
           }}
         >
-          <Box>
-            <Typography sx={{ fontSize: 19, fontWeight: 600, letterSpacing: "-0.01em" }}>
-              {t("title")}
-            </Typography>
-            <Typography sx={{ fontSize: 13, color: "text.secondary", mt: 0.25 }}>
-              {t("subtitle")}
-            </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Logo size="small" color="dark" clickable />
+            <Box sx={{ height: 22, width: 1, bgcolor: "divider" }} />
+            <Box>
+              <Typography sx={{ fontSize: 19, fontWeight: 600, letterSpacing: "-0.01em" }}>
+                {t("title")}
+              </Typography>
+              <Typography sx={{ fontSize: 13, color: "text.secondary", mt: 0.25 }}>
+                {t("subtitle")}
+              </Typography>
+            </Box>
           </Box>
         </Stack>
 
@@ -81,21 +89,39 @@ export default function DocsPage() {
 
           <Box
             onClick={() => !uploading && inputRef.current?.click()}
+            onDragEnter={(e) => {
+              e.preventDefault();
+              if (uploading) return;
+              dragCounter.current += 1;
+              setIsDragging(true);
+            }}
             onDragOver={(e) => e.preventDefault()}
+            onDragLeave={(e) => {
+              e.preventDefault();
+              dragCounter.current -= 1;
+              if (dragCounter.current <= 0) {
+                dragCounter.current = 0;
+                setIsDragging(false);
+              }
+            }}
             onDrop={(e) => {
               e.preventDefault();
+              dragCounter.current = 0;
+              setIsDragging(false);
               if (!uploading) handleFiles(e.dataTransfer.files);
             }}
             sx={{
               border: "2px dashed",
-              borderColor: "borderStrong",
+              borderColor: isDragging ? "primary.main" : "borderStrong",
               borderRadius: "10px",
-              bgcolor: "surfaceSubtle",
+              bgcolor: isDragging ? "surfaceHover" : "surfaceSubtle",
               py: 5,
               px: 3,
               textAlign: "center",
               cursor: uploading ? "default" : "pointer",
               opacity: uploading ? 0.6 : 1,
+              transform: isDragging ? "scale(1.01)" : "scale(1)",
+              transition: "border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease",
               "&:hover": uploading
                 ? {}
                 : { borderColor: "primary.light", bgcolor: "surfaceHover" },
@@ -127,9 +153,13 @@ export default function DocsPage() {
               />
             </Box>
             <Typography sx={{ fontSize: 16, fontWeight: 600, mb: 0.75 }}>
-              {uploading ? t("uploading") : t("dropzoneTitle")}
+              {uploading
+                ? t("uploading")
+                : isDragging
+                  ? t("dropzoneDropHere")
+                  : t("dropzoneTitle")}
             </Typography>
-            {!uploading && (
+            {!uploading && !isDragging && (
               <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
                 {t("dropzoneOr")}{" "}
                 <Box component="span" sx={{ color: "primary.main", fontWeight: 600 }}>
@@ -161,7 +191,32 @@ export default function DocsPage() {
             </Alert>
           )}
 
-          {documents.length > 0 ? (
+          {loading ? (
+            <>
+              <Stack
+                direction="row"
+                sx={{ alignItems: "baseline", justifyContent: "space-between", mt: 4, mb: 1.75 }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: "text.secondary",
+                  }}
+                >
+                  {t("loadingHeading")}
+                </Typography>
+              </Stack>
+
+              <Stack spacing={1.25}>
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <DocumentRowSkeleton key={i} />
+                ))}
+              </Stack>
+            </>
+          ) : documents.length > 0 ? (
             <>
               <Stack
                 direction="row"
@@ -196,8 +251,7 @@ export default function DocsPage() {
               </Stack>
             </>
           ) : (
-            !loading && (
-              <Box
+            <Box
                 sx={{
                   mt: 4,
                   bgcolor: "background.paper",
@@ -226,7 +280,6 @@ export default function DocsPage() {
                   {t("emptyBody")}
                 </Typography>
               </Box>
-            )
           )}
         </Box>
       </Stack>

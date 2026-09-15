@@ -49,12 +49,27 @@ export async function parseErrorResponse<
 }
 
 export async function extractErrorMessage<
-  T extends { message?: string; title?: string; error?: string },
+  T extends {
+    message?: string;
+    title?: string;
+    error?: string;
+    errors?: Record<string, string[]>;
+  },
 >(response: Response, fallbackMessage: string): Promise<string> {
   let errorData: T = {} as T;
   try {
     errorData = (await response.json()) as T;
   } catch {}
 
-  return errorData.message ?? errorData.title ?? errorData.error ?? fallbackMessage;
+  const firstFieldError = errorData.errors
+    ? Object.values(errorData.errors).flat().find((m) => !!m)
+    : undefined;
+
+  return (
+    errorData.message ??
+    firstFieldError ??
+    errorData.title ??
+    errorData.error ??
+    fallbackMessage
+  );
 }

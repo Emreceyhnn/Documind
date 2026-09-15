@@ -24,8 +24,71 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DocuMind",
-  description: "Ask questions about your documents and get cited answers.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+  ),
+  title: {
+    default: "DocuMind | Yapay Zeka Destekli Doküman Analiz ve Soru-Cevap",
+    template: "%s | DocuMind",
+  },
+  description:
+    "Kurumsal ve kişisel dokümanlarınızı yükleyin, yapay zeka (RAG) ile anında sohbet edin ve doğrudan kaynak gösterilen doğru yanıtlar alın.",
+  applicationName: "DocuMind",
+  authors: [{ name: "DocuMind Team" }],
+  generator: "Next.js",
+  keywords: [
+    "DocuMind",
+    "Doküman Analizi",
+    "Yapay Zeka",
+    "RAG",
+    "PDF Soru Cevap",
+    "AI Document Assistant",
+    "Document QA",
+    "AI Chat",
+    "Vektör Arama",
+    "Kaynak Gösterimli Yapay Zeka",
+  ],
+  referrer: "origin-when-cross-origin",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  openGraph: {
+    title: "DocuMind - Yapay Zeka Destekli Doküman Analiz Platformu",
+    description:
+      "Dokümanlarınızla sohbet edin, yapay zeka ile anında yanıtlar ve tam kaynak gösterimleri alın.",
+    url: "https://documind.app",
+    siteName: "DocuMind",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "DocuMind AI Document Analysis & Chat",
+      },
+    ],
+    locale: "tr_TR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DocuMind - AI Document QA Platform",
+    description:
+      "Ask questions about your documents and get cited answers with exact source citations.",
+    images: ["/og-image.jpg"],
+    creator: "@documind",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+  },
 };
 
 export function generateStaticParams() {
@@ -44,6 +107,21 @@ export default async function RootLayout({
 
   const initialUser = await getCurrentUser();
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "DocuMind",
+    operatingSystem: "All",
+    applicationCategory: "BusinessApplication",
+    description:
+      "Yapay zeka destekli doküman analiz ve kaynak gösterimli soru-cevap platformu.",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+  };
+
   return (
     <html
       lang={lang}
@@ -52,6 +130,10 @@ export default async function RootLayout({
     >
       <head>
         <InitColorSchemeScript attribute="data" defaultMode="light" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useLocale } from "next-intl";
 import {
   deleteDocument,
   getDocumentDownloadUrl,
@@ -10,26 +11,27 @@ import {
 import type { DocumentApi } from "@/app/lib/type/documents";
 import type { DocumentItem } from "@/app/lib/type/ui";
 
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("tr-TR", {
+function formatDate(iso: string, locale: string): string {
+  return new Date(iso).toLocaleDateString(locale, {
     day: "numeric",
     month: "short",
     year: "numeric",
   });
 }
 
-function toDocumentItem(doc: DocumentApi): DocumentItem {
+function toDocumentItem(doc: DocumentApi, locale: string): DocumentItem {
   const sizeMb = (doc.fileSizeBytes / 1024 / 1024).toFixed(1);
   return {
     id: doc.id,
     name: doc.fileName,
     ext: doc.contentType.includes("pdf") ? "PDF" : "DOC",
-    meta: `${formatDate(doc.uploadedAt)} · ${sizeMb} MB`,
+    meta: `${formatDate(doc.uploadedAt, locale)} · ${sizeMb} MB`,
     status: doc.status,
   };
 }
 
 export function useDocuments() {
+  const locale = useLocale();
   const [documents, setDocuments] = useState<DocumentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,38 +42,17 @@ export function useDocuments() {
     setError(null);
     try {
       const data = await listDocuments();
-      setDocuments(data.map(toDocumentItem));
+      setDocuments(data.map((doc) => toDocumentItem(doc, locale)));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Dokümanlar yüklenemedi.");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [locale]);
 
   useEffect(() => {
-    let cancelled = false;
-
-    async function load() {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await listDocuments();
-        if (!cancelled) setDocuments(data.map(toDocumentItem));
-      } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Dokümanlar yüklenemedi.");
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    load();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+    refresh();
+  }, [refresh]);
 
   const upload = useCallback(
     async (file: File) => {

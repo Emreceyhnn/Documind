@@ -84,7 +84,6 @@ export default function SidebarUserFooter({ variant }: SidebarUserFooterProps) {
             {user.email}
           </Typography>
         </Box>
-        <LanguageSwitcher variant="pill" isDark={isDark} />
         <Tooltip title={mode === "dark" ? t("lightMode") : t("darkMode")}>
           <IconButton
             onClick={toggleMode}
@@ -104,30 +103,33 @@ export default function SidebarUserFooter({ variant }: SidebarUserFooterProps) {
         </Tooltip>
       </Stack>
 
-      <Box
-        component="button"
-        onClick={handleLogout}
-        sx={{
-          display: "block",
-          width: "100%",
-          textAlign: "left",
-          fontFamily: "inherit",
-          fontSize: 12,
-          fontWeight: 600,
-          color: isDark ? "rgba(255,255,255,0.72)" : "text.secondary",
-          bgcolor: "transparent",
-          border: 0,
-          cursor: "pointer",
-          mt: 1,
-          px: 0.25,
-          py: 0.375,
-          "&:hover": {
-            color: isDark ? "#fff" : "primary.main",
-          },
-        }}
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{ alignItems: "center", justifyContent: "space-between", mt: 1.25 }}
       >
-        {t("logout")}
-      </Box>
+        <Box
+          component="button"
+          onClick={handleLogout}
+          sx={{
+            fontFamily: "inherit",
+            fontSize: 12,
+            fontWeight: 600,
+            color: isDark ? "rgba(255,255,255,0.72)" : "text.secondary",
+            bgcolor: "transparent",
+            border: 0,
+            cursor: "pointer",
+            px: 0.25,
+            py: 0.375,
+            "&:hover": {
+              color: isDark ? "#fff" : "primary.main",
+            },
+          }}
+        >
+          {t("logout")}
+        </Box>
+        <LanguageSwitcher variant="pill" isDark={isDark} />
+      </Stack>
     </Box>
   );
 }

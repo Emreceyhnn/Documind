@@ -15,6 +15,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import Sidebar from "@/app/components/Sidebar";
+import Logo from "@/app/components/Logo";
 import LanguageSwitcher from "@/app/components/LanguageSwitcher";
 import { useAuth } from "@/app/lib/hooks/useAuth";
 import { updateUser, deleteUser } from "@/app/lib/api/auth";
@@ -104,8 +105,12 @@ export default function SettingsPage() {
       <Sidebar />
 
       <Stack sx={{ flex: 1, minWidth: 0 }}>
-        <Box
+        <Stack
+          direction="row"
+          spacing={2}
           sx={{
+            alignItems: "center",
+            justifyContent: "space-between",
             px: 4,
             py: 2.25,
             bgcolor: "background.paper",
@@ -114,13 +119,19 @@ export default function SettingsPage() {
             boxShadow: "0 1px 3px rgba(15,18,34,0.05)",
           }}
         >
-          <Typography sx={{ fontSize: 19, fontWeight: 600, letterSpacing: "-0.01em" }}>
-            {t("title")}
-          </Typography>
-          <Typography sx={{ fontSize: 13, color: "text.secondary", mt: 0.25 }}>
-            {t("subtitle")}
-          </Typography>
-        </Box>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Logo size="small" color="dark" clickable />
+            <Box sx={{ height: 22, width: 1, bgcolor: "divider" }} />
+            <Box>
+              <Typography sx={{ fontSize: 19, fontWeight: 600, letterSpacing: "-0.01em" }}>
+                {t("title")}
+              </Typography>
+              <Typography sx={{ fontSize: 13, color: "text.secondary", mt: 0.25 }}>
+                {t("subtitle")}
+              </Typography>
+            </Box>
+          </Box>
+        </Stack>
 
         <Box sx={{ flex: 1, px: 4, pt: 3.5, pb: 12, maxWidth: 640, width: "100%" }}>
           <Box
