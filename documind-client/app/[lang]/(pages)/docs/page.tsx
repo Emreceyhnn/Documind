@@ -5,6 +5,7 @@ import { Alert, Box, Stack, Typography } from "@mui/material";
 import { useTranslations } from "next-intl";
 import Sidebar from "@/app/components/Sidebar";
 import Logo from "@/app/components/Logo";
+import UserBadge from "@/app/components/UserBadge";
 import DocumentRow from "@/app/components/DocumentRow";
 import DocumentRowSkeleton from "@/app/components/DocumentRowSkeleton";
 import EmptyDocsIllustration from "@/app/components/EmptyDocsIllustration";
@@ -64,22 +65,26 @@ export default function DocsPage() {
             spacing={2}
             sx={{
               alignItems: "center",
+              justifyContent: "space-between",
               px: 4,
               py: 2.25,
               maxWidth: 1000,
               mx: "auto",
             }}
           >
-            <Logo size="small" color="dark" clickable />
-            <Box sx={{ height: 22, width: 1, bgcolor: "divider" }} />
-            <Box>
-              <Typography sx={{ fontSize: 19, fontWeight: 600, letterSpacing: "-0.01em" }}>
-                {t("title")}
-              </Typography>
-              <Typography sx={{ fontSize: 13, color: "text.secondary", mt: 0.25 }}>
-                {t("subtitle")}
-              </Typography>
-            </Box>
+            <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
+              <Logo size="small" color="dark" clickable />
+              <Box sx={{ height: 22, width: 1, bgcolor: "divider" }} />
+              <Box>
+                <Typography sx={{ fontSize: 19, fontWeight: 600, letterSpacing: "-0.01em" }}>
+                  {t("title")}
+                </Typography>
+                <Typography sx={{ fontSize: 13, color: "text.secondary", mt: 0.25 }}>
+                  {t("subtitle")}
+                </Typography>
+              </Box>
+            </Stack>
+            <UserBadge />
           </Stack>
         </Box>
 

@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "@/i18n/navigation";
 import Sidebar from "@/app/components/Sidebar";
 import Logo from "@/app/components/Logo";
+import UserBadge from "@/app/components/UserBadge";
 import LanguageSwitcher from "@/app/components/LanguageSwitcher";
 import { useAuth } from "@/app/lib/hooks/useAuth";
 import { updateUser, deleteUser } from "@/app/lib/api/auth";
@@ -167,22 +168,26 @@ export default function SettingsPage() {
             spacing={2}
             sx={{
               alignItems: "center",
+              justifyContent: "space-between",
               px: 4,
               py: 2.25,
               maxWidth: 640,
               mx: "auto",
             }}
           >
-            <Logo size="small" color="dark" clickable />
-            <Box sx={{ height: 22, width: 1, bgcolor: "divider" }} />
-            <Box>
-              <Typography sx={{ fontSize: 19, fontWeight: 600, letterSpacing: "-0.01em" }}>
-                {t("title")}
-              </Typography>
-              <Typography sx={{ fontSize: 13, color: "text.secondary", mt: 0.25 }}>
-                {t("subtitle")}
-              </Typography>
-            </Box>
+            <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
+              <Logo size="small" color="dark" clickable />
+              <Box sx={{ height: 22, width: 1, bgcolor: "divider" }} />
+              <Box>
+                <Typography sx={{ fontSize: 19, fontWeight: 600, letterSpacing: "-0.01em" }}>
+                  {t("title")}
+                </Typography>
+                <Typography sx={{ fontSize: 13, color: "text.secondary", mt: 0.25 }}>
+                  {t("subtitle")}
+                </Typography>
+              </Box>
+            </Stack>
+            <UserBadge />
           </Stack>
         </Box>
 
