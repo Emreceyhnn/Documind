@@ -148,7 +148,9 @@
     "settings": "Ayarlar",
     "logout": "Çıkış yap",
     "darkMode": "Koyu temaya geç",
-    "lightMode": "Açık temaya geç"
+    "lightMode": "Açık temaya geç",
+    "openMenu": "Menüyü aç",
+    "closeMenu": "Menüyü kapat"
   },
   "Docs": {
     "title": "Dokümanlar",

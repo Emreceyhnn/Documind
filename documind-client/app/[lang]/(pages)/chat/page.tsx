@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Alert, Box, Stack, TextField, Typography } from "@mui/material";
+import { Alert, Box, IconButton, Stack, TextField, Typography } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import { useTranslations } from "next-intl";
 import Sidebar from "@/app/components/Sidebar";
 import Logo from "@/app/components/Logo";
@@ -14,9 +15,11 @@ import { useDocuments } from "@/app/lib/hooks/useDocuments";
 
 export default function ChatPage() {
   const t = useTranslations("Chat");
+  const tSidebar = useTranslations("Sidebar");
   const { messages, sending, error, send } = useChat();
   const { documents, uploading, upload } = useDocuments();
   const [draft, setDraft] = useState("");
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const readyCount = documents.filter((d) => d.status === "ready").length;
@@ -45,26 +48,37 @@ export default function ChatPage() {
 
   return (
     <Stack direction="row" sx={{ height: "100vh", bgcolor: "background.default" }}>
-      <Sidebar />
+      <Sidebar mobileOpen={mobileNavOpen} onMobileClose={() => setMobileNavOpen(false)} />
 
       <Stack sx={{ flex: 1, minWidth: 0 }}>
         <Stack
           direction="row"
-          spacing={2}
+          spacing={{ xs: 1, sm: 2 }}
+          useFlexGap
           sx={{
             alignItems: "center",
             justifyContent: "space-between",
-            px: 3.5,
-            py: 2,
+            flexWrap: "wrap",
+            rowGap: 1,
+            px: { xs: 2, sm: 3.5 },
+            py: { xs: 1.5, sm: 2 },
             bgcolor: "background.paper",
             borderBottom: "1px solid",
             borderColor: "divider",
             boxShadow: "0 1px 3px rgba(15,18,34,0.05)",
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Logo size="small" color="dark" clickable />
-            <Box sx={{ height: 22, width: 1, bgcolor: "divider" }} />
+          <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1, sm: 2 }, minWidth: 0 }}>
+            <IconButton
+              onClick={() => setMobileNavOpen(true)}
+              size="small"
+              sx={{ display: { xs: "inline-flex", md: "none" }, color: "text.secondary", flexShrink: 0 }}
+              aria-label={tSidebar("openMenu")}
+            >
+              <MenuIcon fontSize="small" />
+            </IconButton>
+            <Logo size="small" color="dark" clickable showText={false} />
+            <Box sx={{ height: 22, width: 1, bgcolor: "divider", display: { xs: "none", sm: "block" } }} />
             <UserBadge />
           </Box>
           <input
@@ -77,7 +91,7 @@ export default function ChatPage() {
               e.target.value = "";
             }}
           />
-          <Stack direction="row" spacing={1.25} sx={{ alignItems: "center" }}>
+          <Stack direction="row" spacing={1.25} sx={{ alignItems: "center", flexWrap: "wrap", rowGap: 1 }}>
             <Box
               component="button"
               onClick={() => !uploading && inputRef.current?.click()}
@@ -92,6 +106,7 @@ export default function ChatPage() {
                 borderRadius: "6px",
                 px: 1.5,
                 py: 0.75,
+                whiteSpace: "nowrap",
                 cursor: uploading ? "default" : "pointer",
                 opacity: uploading ? 0.6 : 1,
                 "&:hover": uploading ? {} : { bgcolor: "surfaceHover" },
@@ -110,7 +125,7 @@ export default function ChatPage() {
           </Stack>
         </Stack>
 
-        <Box sx={{ flex: 1, overflow: "auto", px: 3.5, pt: 3.5, pb: 2.5 }}>
+        <Box sx={{ flex: 1, overflow: "auto", px: { xs: 2, sm: 3.5 }, pt: { xs: 2.5, sm: 3.5 }, pb: 2.5 }}>
           <Stack sx={{ maxWidth: 780, mx: "auto", gap: 2.75 }}>
             {error && <Alert severity="error">{error}</Alert>}
 
@@ -136,7 +151,7 @@ export default function ChatPage() {
 
         <Box
           sx={{
-            px: 3.5,
+            px: { xs: 2, sm: 3.5 },
             pt: 2,
             pb: { xs: 4, sm: 10.5 },
             bgcolor: "background.paper",

@@ -44,16 +44,18 @@ export default function DocumentRow({ doc, onOpen, onDelete }: DocumentRowProps)
   return (
     <Stack
       direction="row"
-      spacing={2}
+      spacing={{ xs: 1.25, sm: 2 }}
+      useFlexGap
       onClick={() => onOpen?.(doc.id)}
       sx={{
         alignItems: "center",
+        flexWrap: "wrap",
         bgcolor: "background.paper",
         border: "1px solid",
         borderColor: "divider",
         borderRadius: "8px",
-        px: 2.25,
-        py: 2,
+        px: { xs: 1.5, sm: 2.25 },
+        py: { xs: 1.5, sm: 2 },
         boxShadow: "0 1px 2px rgba(15,18,34,0.06)",
         cursor: "pointer",
         "&:hover": {
@@ -63,7 +65,7 @@ export default function DocumentRow({ doc, onOpen, onDelete }: DocumentRowProps)
       }}
     >
       <FileTypeTile ext={doc.ext} />
-      <Stack sx={{ flex: 1, minWidth: 0 }}>
+      <Stack sx={{ flex: "1 1 140px", minWidth: 0 }}>
         <Typography
           sx={{
             fontSize: 15,
@@ -87,10 +89,12 @@ export default function DocumentRow({ doc, onOpen, onDelete }: DocumentRowProps)
           {doc.meta}
         </Typography>
       </Stack>
-      <StatusChip status={doc.status} label={statusLabel} />
-      <IconButton size="small" onClick={handleMenuOpen} sx={{ color: "text.disabled" }}>
-        <MoreVertIcon fontSize="small" />
-      </IconButton>
+      <Stack direction="row" spacing={0.5} sx={{ alignItems: "center", flexShrink: 0, ml: "auto" }}>
+        <StatusChip status={doc.status} label={statusLabel} />
+        <IconButton size="small" onClick={handleMenuOpen} sx={{ color: "text.disabled" }}>
+          <MoreVertIcon fontSize="small" />
+        </IconButton>
+      </Stack>
       <Menu anchorEl={anchorEl} open={menuOpen} onClose={handleMenuClose} onClick={(e) => e.stopPropagation()}>
         <MenuItem onClick={handleDeleteClick} sx={{ color: "statusError.main" }}>
           <DeleteOutlineIcon fontSize="small" sx={{ mr: 1 }} />

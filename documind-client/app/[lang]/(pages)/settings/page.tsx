@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import MenuIcon from "@mui/icons-material/Menu";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,10 +34,12 @@ import { translateServerMessage } from "@/app/lib/api/errorMessages";
 
 export default function SettingsPage() {
   const t = useTranslations("Settings");
+  const tSidebar = useTranslations("Sidebar");
   const tErrors = useTranslations("Errors");
   const router = useRouter();
   const { user } = useAuth();
 
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -152,7 +155,7 @@ export default function SettingsPage() {
 
   return (
     <Stack direction="row" sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
-      <Sidebar />
+      <Sidebar mobileOpen={mobileNavOpen} onMobileClose={() => setMobileNavOpen(false)} />
 
       <Stack sx={{ flex: 1, minWidth: 0 }}>
         <Box
@@ -165,24 +168,48 @@ export default function SettingsPage() {
         >
           <Stack
             direction="row"
-            spacing={2}
+            spacing={{ xs: 1, sm: 2 }}
             sx={{
               alignItems: "center",
               justifyContent: "space-between",
-              px: 4,
-              py: 2.25,
+              px: { xs: 2, sm: 4 },
+              py: { xs: 1.5, sm: 2.25 },
               maxWidth: 640,
               mx: "auto",
             }}
           >
-            <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
-              <Logo size="small" color="dark" clickable />
-              <Box sx={{ height: 22, width: 1, bgcolor: "divider" }} />
-              <Box>
-                <Typography sx={{ fontSize: 19, fontWeight: 600, letterSpacing: "-0.01em" }}>
+            <Stack direction="row" spacing={{ xs: 1, sm: 2 }} sx={{ alignItems: "center", minWidth: 0 }}>
+              <IconButton
+                onClick={() => setMobileNavOpen(true)}
+                size="small"
+                sx={{ display: { xs: "inline-flex", md: "none" }, color: "text.secondary", flexShrink: 0 }}
+                aria-label={tSidebar("openMenu")}
+              >
+                <MenuIcon fontSize="small" />
+              </IconButton>
+              <Logo size="small" color="dark" clickable showText={false} />
+              <Box sx={{ height: 22, width: 1, bgcolor: "divider", display: { xs: "none", sm: "block" } }} />
+              <Box sx={{ minWidth: 0 }}>
+                <Typography
+                  sx={{
+                    fontSize: { xs: 16, sm: 19 },
+                    fontWeight: 600,
+                    letterSpacing: "-0.01em",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
                   {t("title")}
                 </Typography>
-                <Typography sx={{ fontSize: 13, color: "text.secondary", mt: 0.25 }}>
+                <Typography
+                  sx={{
+                    display: { xs: "none", sm: "block" },
+                    fontSize: 13,
+                    color: "text.secondary",
+                    mt: 0.25,
+                  }}
+                >
                   {t("subtitle")}
                 </Typography>
               </Box>
@@ -191,7 +218,17 @@ export default function SettingsPage() {
           </Stack>
         </Box>
 
-        <Box sx={{ flex: 1, px: 4, pt: 3.5, pb: 12, maxWidth: 640, width: "100%", mx: "auto" }}>
+        <Box
+          sx={{
+            flex: 1,
+            px: { xs: 2, sm: 4 },
+            pt: { xs: 2.5, sm: 3.5 },
+            pb: 12,
+            maxWidth: 640,
+            width: "100%",
+            mx: "auto",
+          }}
+        >
           <Box
             component="form"
             noValidate
@@ -201,7 +238,7 @@ export default function SettingsPage() {
               border: "1px solid",
               borderColor: "divider",
               borderRadius: "10px",
-              p: 3.5,
+              p: { xs: 2.25, sm: 3.5 },
               boxShadow: "0 1px 2px rgba(15,18,34,0.06)",
             }}
           >
@@ -259,7 +296,7 @@ export default function SettingsPage() {
               border: "1px solid",
               borderColor: "divider",
               borderRadius: "10px",
-              p: 3.5,
+              p: { xs: 2.25, sm: 3.5 },
               boxShadow: "0 1px 2px rgba(15,18,34,0.06)",
             }}
           >
@@ -312,7 +349,11 @@ export default function SettingsPage() {
                   </Alert>
                 )}
 
-                <Stack direction="row" spacing={1.25} sx={{ alignItems: "flex-start" }}>
+                <Stack
+                  direction={{ xs: "column", sm: "row" }}
+                  spacing={1.25}
+                  sx={{ alignItems: { xs: "stretch", sm: "flex-start" } }}
+                >
                   <TextField
                     type="email"
                     placeholder={t("teamInviteEmailPlaceholder")}
@@ -322,7 +363,12 @@ export default function SettingsPage() {
                     size="small"
                     {...registerInvite("memberEmail")}
                   />
-                  <Button type="submit" variant="contained" loading={inviting} sx={{ px: 2.5, flexShrink: 0 }}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    loading={inviting}
+                    sx={{ px: 2.5, flexShrink: 0, width: { xs: "100%", sm: "auto" } }}
+                  >
                     {t("teamInviteSubmit")}
                   </Button>
                 </Stack>
@@ -337,7 +383,7 @@ export default function SettingsPage() {
               border: "1px solid",
               borderColor: "divider",
               borderRadius: "10px",
-              p: 3.5,
+              p: { xs: 2.25, sm: 3.5 },
               boxShadow: "0 1px 2px rgba(15,18,34,0.06)",
             }}
           >
@@ -358,7 +404,7 @@ export default function SettingsPage() {
               border: "1px solid",
               borderColor: "statusError.main",
               borderRadius: "10px",
-              p: 3.5,
+              p: { xs: 2.25, sm: 3.5 },
               boxShadow: "0 1px 2px rgba(15,18,34,0.06)",
             }}
           >

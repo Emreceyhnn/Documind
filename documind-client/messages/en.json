@@ -148,7 +148,9 @@
     "settings": "Settings",
     "logout": "Log out",
     "darkMode": "Switch to dark mode",
-    "lightMode": "Switch to light mode"
+    "lightMode": "Switch to light mode",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "Docs": {
     "title": "Documents",

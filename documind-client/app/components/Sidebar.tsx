@@ -1,6 +1,7 @@
 "use client";
 
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Drawer, IconButton, Stack, Typography } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import Logo from "./Logo";
@@ -16,7 +17,14 @@ import {
   SIDEBAR_TEXT_MUTED,
 } from "@/app/lib/sidebarColors";
 
-export default function Sidebar() {
+export const SIDEBAR_WIDTH = 240;
+
+interface SidebarProps {
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
+}
+
+export default function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
   const t = useTranslations("Sidebar");
   const tChat = useTranslations("Chat");
   const pathname = usePathname();
@@ -30,28 +38,35 @@ export default function Sidebar() {
   const settingsActive = pathname === "/settings";
   const onChatPage = pathname === "/chat";
 
-  return (
+  const content = (
     <Box
       sx={{
-        width: 240,
+        width: SIDEBAR_WIDTH,
         flexShrink: 0,
         bgcolor: SIDEBAR_BG,
         color: "#fff",
         display: "flex",
         flexDirection: "column",
-        height: "100vh",
-        position: "sticky",
-        top: 0,
-        alignSelf: "flex-start",
-        borderRight: "1px solid",
-        borderColor: SIDEBAR_BORDER,
+        height: "100%",
         px: 2,
         py: 2.5,
       }}
     >
-      <Box sx={{ px: 0.5, pb: 2.5 }}>
+      <Stack direction="row" sx={{ alignItems: "center", justifyContent: "space-between", px: 0.5, pb: 2.5 }}>
         <Logo size="small" color="light" />
-      </Box>
+        <IconButton
+          onClick={onMobileClose}
+          size="small"
+          sx={{
+            display: { xs: "inline-flex", md: "none" },
+            color: "rgba(255,255,255,0.72)",
+            "&:hover": { color: "#fff", bgcolor: SIDEBAR_BG_HOVER },
+          }}
+          aria-label={t("closeMenu")}
+        >
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      </Stack>
 
       <Box
         sx={{
@@ -85,6 +100,7 @@ export default function Sidebar() {
             key={item.href}
             component={Link}
             href={item.href}
+            onClick={onMobileClose}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -118,6 +134,7 @@ export default function Sidebar() {
         <Box
           component={Link}
           href="/settings"
+          onClick={onMobileClose}
           sx={{
             display: "flex",
             alignItems: "center",
@@ -154,6 +171,7 @@ export default function Sidebar() {
           <Button
             component={Link}
             href="/docs"
+            onClick={onMobileClose}
             variant="outlined"
             fullWidth
             sx={{
@@ -176,5 +194,41 @@ export default function Sidebar() {
 
       <SidebarUserFooter variant="dark" />
     </Box>
+  );
+
+  return (
+    <>
+      <Box
+        sx={{
+          display: { xs: "none", md: "block" },
+          flexShrink: 0,
+          height: "100vh",
+          position: "sticky",
+          top: 0,
+          alignSelf: "flex-start",
+          borderRight: "1px solid",
+          borderColor: SIDEBAR_BORDER,
+        }}
+      >
+        {content}
+      </Box>
+
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={onMobileClose}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          display: { xs: "block", md: "none" },
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: SIDEBAR_WIDTH,
+            border: "none",
+          },
+        }}
+      >
+        {content}
+      </Drawer>
+    </>
   );
 }

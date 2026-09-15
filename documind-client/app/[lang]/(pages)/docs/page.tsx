@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Alert, Box, Stack, Typography } from "@mui/material";
+import { Alert, Box, IconButton, Stack, Typography } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import { useTranslations } from "next-intl";
 import Sidebar from "@/app/components/Sidebar";
 import Logo from "@/app/components/Logo";
@@ -14,12 +15,14 @@ import { translateServerMessage } from "@/app/lib/api/errorMessages";
 
 export default function DocsPage() {
   const t = useTranslations("Docs");
+  const tSidebar = useTranslations("Sidebar");
   const tErrors = useTranslations("Errors");
   const { documents, loading, error, uploading, upload, getDownloadUrl, remove } =
     useDocuments();
   const inputRef = useRef<HTMLInputElement>(null);
   const [openError, setOpenError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const dragCounter = useRef(0);
 
   function handleFiles(files: FileList | null) {
@@ -49,7 +52,7 @@ export default function DocsPage() {
 
   return (
     <Stack direction="row" sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
-      <Sidebar />
+      <Sidebar mobileOpen={mobileNavOpen} onMobileClose={() => setMobileNavOpen(false)} />
 
       <Stack sx={{ flex: 1, minWidth: 0 }}>
         <Box
@@ -62,24 +65,48 @@ export default function DocsPage() {
         >
           <Stack
             direction="row"
-            spacing={2}
+            spacing={{ xs: 1, sm: 2 }}
             sx={{
               alignItems: "center",
               justifyContent: "space-between",
-              px: 4,
-              py: 2.25,
+              px: { xs: 2, sm: 4 },
+              py: { xs: 1.5, sm: 2.25 },
               maxWidth: 1000,
               mx: "auto",
             }}
           >
-            <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
-              <Logo size="small" color="dark" clickable />
-              <Box sx={{ height: 22, width: 1, bgcolor: "divider" }} />
-              <Box>
-                <Typography sx={{ fontSize: 19, fontWeight: 600, letterSpacing: "-0.01em" }}>
+            <Stack direction="row" spacing={{ xs: 1, sm: 2 }} sx={{ alignItems: "center", minWidth: 0 }}>
+              <IconButton
+                onClick={() => setMobileNavOpen(true)}
+                size="small"
+                sx={{ display: { xs: "inline-flex", md: "none" }, color: "text.secondary", flexShrink: 0 }}
+                aria-label={tSidebar("openMenu")}
+              >
+                <MenuIcon fontSize="small" />
+              </IconButton>
+              <Logo size="small" color="dark" clickable showText={false} />
+              <Box sx={{ height: 22, width: 1, bgcolor: "divider", display: { xs: "none", sm: "block" } }} />
+              <Box sx={{ minWidth: 0 }}>
+                <Typography
+                  sx={{
+                    fontSize: { xs: 16, sm: 19 },
+                    fontWeight: 600,
+                    letterSpacing: "-0.01em",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
                   {t("title")}
                 </Typography>
-                <Typography sx={{ fontSize: 13, color: "text.secondary", mt: 0.25 }}>
+                <Typography
+                  sx={{
+                    display: { xs: "none", sm: "block" },
+                    fontSize: 13,
+                    color: "text.secondary",
+                    mt: 0.25,
+                  }}
+                >
                   {t("subtitle")}
                 </Typography>
               </Box>
@@ -88,7 +115,17 @@ export default function DocsPage() {
           </Stack>
         </Box>
 
-        <Box sx={{ flex: 1, px: 4, pt: 3.5, pb: 12, maxWidth: 1000, width: "100%", mx: "auto" }}>
+        <Box
+          sx={{
+            flex: 1,
+            px: { xs: 2, sm: 4 },
+            pt: { xs: 2.5, sm: 3.5 },
+            pb: 12,
+            maxWidth: 1000,
+            width: "100%",
+            mx: "auto",
+          }}
+        >
           <input
             ref={inputRef}
             type="file"
@@ -128,8 +165,8 @@ export default function DocsPage() {
               borderColor: isDragging ? "primary.main" : "borderStrong",
               borderRadius: "10px",
               bgcolor: isDragging ? "surfaceHover" : "surfaceSubtle",
-              py: 5,
-              px: 3,
+              py: { xs: 3.5, sm: 5 },
+              px: { xs: 2, sm: 3 },
               textAlign: "center",
               cursor: uploading ? "default" : "pointer",
               opacity: uploading ? 0.6 : 1,

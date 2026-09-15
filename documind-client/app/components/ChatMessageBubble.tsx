@@ -20,15 +20,16 @@ export default function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
       <Stack direction="row" spacing={1.5} sx={{ justifyContent: "flex-end" }}>
         <Box
           sx={{
-            maxWidth: "76%",
+            maxWidth: { xs: "88%", sm: "76%" },
             bgcolor: "primary.main",
             color: "primary.contrastText",
-            px: 2.25,
+            px: { xs: 1.75, sm: 2.25 },
             py: 1.75,
             borderRadius: "12px 12px 4px 12px",
             fontSize: 15,
             lineHeight: 1.6,
             boxShadow: "0 2px 8px rgba(79,70,229,0.22)",
+            wordBreak: "break-word",
           }}
         >
           {message.text}
@@ -78,18 +79,19 @@ export default function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
           }}
         />
       </Box>
-      <Box sx={{ maxWidth: "84%", minWidth: 0 }}>
+      <Box sx={{ maxWidth: { xs: "90%", sm: "84%" }, minWidth: 0 }}>
         <Box
           sx={{
             bgcolor: "background.paper",
             border: "1px solid",
             borderColor: "divider",
-            px: 2.25,
+            px: { xs: 1.75, sm: 2.25 },
             py: 2,
             borderRadius: "12px 12px 12px 4px",
             fontSize: 15,
             lineHeight: 1.65,
             boxShadow: "0 1px 3px rgba(15,18,34,0.07)",
+            wordBreak: "break-word",
           }}
         >
           {message.text}

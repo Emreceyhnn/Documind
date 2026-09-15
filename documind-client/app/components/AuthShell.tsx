@@ -27,8 +27,9 @@ export default function AuthShell({
           justifyContent: "center",
           overflowY: "auto",
           position: "relative",
-          px: 3,
-          py: { xs: 4, sm: 6 },
+          px: { xs: 2, sm: 3 },
+          pt: { xs: 7, sm: 6 },
+          pb: { xs: 4, sm: 6 },
           background: gradient
             ? "linear-gradient(160deg, #EEF0FE 0%, #F8F9FC 55%, #E6E9FC 100%)"
             : "background.default",
@@ -41,12 +42,12 @@ export default function AuthShell({
             : {},
       ]}
     >
-      <Box sx={{ position: "absolute", top: 20, right: 24 }}>
+      <Box sx={{ position: "absolute", top: { xs: 12, sm: 20 }, right: { xs: 12, sm: 24 } }}>
         <LanguageSwitcher variant="button" />
       </Box>
 
       <Box sx={{ width: "100%", maxWidth }}>
-        <Stack sx={{ alignItems: "center", mb: 3.5 }}>
+        <Stack sx={{ alignItems: "center", mb: { xs: 2.75, sm: 3.5 } }}>
           <Logo size="medium" />
         </Stack>
 
@@ -55,9 +56,9 @@ export default function AuthShell({
             {
               bgcolor: "background.paper",
               borderRadius: "14px",
-              px: 4,
-              pt: 4.5,
-              pb: 3.75,
+              px: { xs: 2.5, sm: 4 },
+              pt: { xs: 3.5, sm: 4.5 },
+              pb: { xs: 3, sm: 3.75 },
               border: "1px solid",
               borderColor: "divider",
               boxShadow: "0 1px 2px rgba(15,18,34,0.06), 0 12px 32px rgba(15,18,34,0.08)",

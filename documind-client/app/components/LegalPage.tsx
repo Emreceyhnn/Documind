@@ -11,7 +11,7 @@ export default function LegalPage({ namespace }: LegalPageProps) {
   const t = useTranslations(namespace);
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default", px: 3, py: { xs: 4, sm: 6 } }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default", px: { xs: 2, sm: 3 }, py: { xs: 4, sm: 6 } }}>
       <Stack sx={{ maxWidth: 640, mx: "auto" }}>
         <Box sx={{ mb: 4 }}>
           <Link href="/auth/sign-up" style={{ textDecoration: "none" }}>

@@ -22,7 +22,7 @@ export default function UserBadge() {
         borderColor: "divider",
         borderRadius: "999px",
         pl: 0.5,
-        pr: 1.75,
+        pr: { xs: 0.5, sm: 1.75 },
         py: 0.5,
       }}
     >
@@ -45,6 +45,7 @@ export default function UserBadge() {
       </Box>
       <Typography
         sx={{
+          display: { xs: "none", sm: "block" },
           fontSize: 13,
           fontWeight: 600,
           color: "text.primary",

@@ -9,7 +9,7 @@ export default function SourceCard({ source }: SourceCardProps) {
   return (
     <Box
       sx={{
-        flex: "1 1 280px",
+        flex: { xs: "1 1 100%", sm: "1 1 280px" },
         minWidth: 0,
         bgcolor: "surfaceSubtle",
         border: "1px solid",

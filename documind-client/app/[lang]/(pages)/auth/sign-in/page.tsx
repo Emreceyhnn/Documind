@@ -233,18 +233,22 @@ export default function SignInPage() {
             <Stack
               direction="row"
               spacing={1.25}
-              sx={{ alignItems: "center", mt: 1.5 }}
+              useFlexGap
+              sx={{ alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", mt: 1.5 }}
             >
               <Typography
                 sx={{
                   fontFamily: "var(--font-ibm-plex-mono)",
                   fontSize: 11,
                   color: "text.disabled",
+                  minWidth: 0,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
                 }}
               >
                 {t("ssoProviders")}
               </Typography>
-              <Box sx={{ flex: 1 }} />
               <Typography
                 component="a"
                 href="#"
@@ -253,6 +257,7 @@ export default function SignInPage() {
                   setSsoOpen(false);
                 }}
                 sx={{
+                  flexShrink: 0,
                   fontSize: 12,
                   fontWeight: 600,
                   color: "primary.light",
