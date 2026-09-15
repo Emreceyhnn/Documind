@@ -171,7 +171,15 @@ export default function ChatPage() {
                 slotProps={{
                   input: {
                     disableUnderline: true,
-                    sx: { alignItems: "center", py: 0.5 },
+                    sx: {
+                      alignItems: "center",
+                      py: 0,
+                      "& textarea": {
+                        lineHeight: 1.5,
+                        py: "9px",
+                        boxSizing: "border-box",
+                      },
+                    },
                   },
                 }}
                 sx={{ flex: 1 }}
