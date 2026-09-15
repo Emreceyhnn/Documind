@@ -15,10 +15,14 @@ import {
   useTheme,
 } from "@mui/material";
 import { useTranslations } from "next-intl";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useRouter } from "@/i18n/navigation";
 import AuthShell from "@/app/components/AuthShell";
 import { useAuth } from "@/app/lib/hooks/useAuth";
 import { checkPendingInvite } from "@/app/lib/api/auth";
+import { buildSignUpSchema, type SignUpFormValues } from "@/app/lib/validation/auth";
+import { translateServerMessage } from "@/app/lib/api/errorMessages";
 
 type Strength = 0 | 1 | 2 | 3;
 
@@ -39,8 +43,9 @@ const STRENGTH_WIDTH: Record<Strength, string> = {
 
 export default function SignUpPage() {
   const t = useTranslations("SignUp");
+  const tErrors = useTranslations("Errors");
   const router = useRouter();
-  const { register, status } = useAuth();
+  const { register: registerUser, status } = useAuth();
   const theme = useTheme();
 
   const strengthColor: Record<Strength, string> = {
@@ -50,23 +55,42 @@ export default function SignUpPage() {
     3: theme.palette.statusReady.main,
   };
 
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [termsAccepted, setTermsAccepted] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [companyMode, setCompanyMode] = useState<"create" | "join">("create");
-  const [newCompanyName, setNewCompanyName] = useState("");
-  const [companyId, setCompanyId] = useState("");
+  const [formError, setFormError] = useState<string | null>(null);
   const [pendingInvite, setPendingInvite] = useState<{
     companyId: string;
     companyName: string;
   } | null>(null);
 
+  const schema = useMemo(() => buildSignUpSchema(tErrors), [tErrors]);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<SignUpFormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      password: "",
+      termsAccepted: true,
+      companyMode: "create",
+      newCompanyName: "",
+      companyId: "",
+      hasPendingInvite: false,
+    },
+  });
+
+  const email = watch("email");
+  const password = watch("password");
+  const companyMode = watch("companyMode");
+
   useEffect(() => {
     const trimmedEmail = email.trim();
     if (!trimmedEmail || !trimmedEmail.includes("@")) {
       setPendingInvite(null);
+      setValue("hasPendingInvite", false);
       return;
     }
 
@@ -75,6 +99,7 @@ export default function SignUpPage() {
       const invite = await checkPendingInvite(trimmedEmail);
       if (!cancelled) {
         setPendingInvite(invite);
+        setValue("hasPendingInvite", !!invite);
       }
     }, 400);
 
@@ -82,7 +107,7 @@ export default function SignUpPage() {
       cancelled = true;
       clearTimeout(timeout);
     };
-  }, [email]);
+  }, [email, setValue]);
 
   const strength = useMemo(() => computeStrength(password), [password]);
   const strengthLabel = {
@@ -94,46 +119,40 @@ export default function SignUpPage() {
 
   const isLoading = status === "loading";
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
+  async function onSubmit(values: SignUpFormValues) {
+    setFormError(null);
 
-    if (!termsAccepted) {
-      setError("Devam etmek için kullanım koşullarını kabul etmelisiniz.");
-      return;
-    }
-
-    const [name, ...rest] = fullName.trim().split(/\s+/);
+    const [name, ...rest] = values.fullName.trim().split(/\s+/);
     const surname = rest.join(" ");
 
     const result = pendingInvite
-      ? await register({
-          email,
-          password,
+      ? await registerUser({
+          email: values.email,
+          password: values.password,
           name: name ?? "",
           surname,
           companyId: pendingInvite.companyId,
         })
-      : companyMode === "create"
-        ? await register({
-            email,
-            password,
+      : values.companyMode === "create"
+        ? await registerUser({
+            email: values.email,
+            password: values.password,
             name: name ?? "",
             surname,
-            newCompanyName: newCompanyName.trim(),
+            newCompanyName: (values.newCompanyName ?? "").trim(),
           })
-        : await register({
-            email,
-            password,
+        : await registerUser({
+            email: values.email,
+            password: values.password,
             name: name ?? "",
             surname,
-            companyId: companyId.trim(),
+            companyId: (values.companyId ?? "").trim(),
           });
 
     if (result.success) {
       router.push("/docs");
     } else {
-      setError(result.message);
+      setFormError(translateServerMessage(result.message, tErrors));
     }
   }
 
@@ -177,29 +196,29 @@ export default function SignUpPage() {
           {t("subtitle")}
         </Typography>
 
-        <Box component="form" onSubmit={handleSubmit}>
+        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={1.75}>
-            {error && <Alert severity="error">{error}</Alert>}
+            {formError && <Alert severity="error">{formError}</Alert>}
 
             <TextField
               label={t("fullNameLabel")}
               placeholder={t("fullNamePlaceholder")}
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              required
               fullWidth
+              error={!!errors.fullName}
+              helperText={errors.fullName?.message}
               slotProps={{ inputLabel: { shrink: true } }}
+              {...register("fullName")}
             />
 
             <TextField
               type="email"
               label={t("emailLabel")}
               placeholder={t("emailPlaceholder")}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
               fullWidth
+              error={!!errors.email}
+              helperText={errors.email?.message}
               slotProps={{ inputLabel: { shrink: true } }}
+              {...register("email")}
             />
 
             <Box>
@@ -207,11 +226,11 @@ export default function SignUpPage() {
                 type="password"
                 label={t("passwordLabel")}
                 placeholder={t("passwordPlaceholder")}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
                 fullWidth
+                error={!!errors.password}
+                helperText={errors.password?.message}
                 slotProps={{ inputLabel: { shrink: true } }}
+                {...register("password")}
               />
               <Stack direction="row" spacing={1.25} sx={{ alignItems: "center", mt: 1.125 }}>
                 <Box
@@ -257,7 +276,7 @@ export default function SignUpPage() {
                   exclusive
                   fullWidth
                   onChange={(_, value) => {
-                    if (value) setCompanyMode(value);
+                    if (value) setValue("companyMode", value);
                   }}
                   sx={{ mb: 1.5 }}
                 >
@@ -269,22 +288,21 @@ export default function SignUpPage() {
                   <TextField
                     label={t("newCompanyNameLabel")}
                     placeholder={t("newCompanyNamePlaceholder")}
-                    value={newCompanyName}
-                    onChange={(e) => setNewCompanyName(e.target.value)}
-                    required
                     fullWidth
+                    error={!!errors.newCompanyName}
+                    helperText={errors.newCompanyName?.message}
                     slotProps={{ inputLabel: { shrink: true } }}
+                    {...register("newCompanyName")}
                   />
                 ) : (
                   <TextField
                     label={t("companyIdLabel")}
                     placeholder={t("companyIdPlaceholder")}
-                    helperText={t("companyIdHint")}
-                    value={companyId}
-                    onChange={(e) => setCompanyId(e.target.value)}
-                    required
                     fullWidth
+                    error={!!errors.companyId}
+                    helperText={errors.companyId?.message ?? t("companyIdHint")}
                     slotProps={{ inputLabel: { shrink: true } }}
+                    {...register("companyId")}
                   />
                 )}
               </Box>
@@ -294,8 +312,8 @@ export default function SignUpPage() {
               sx={{ alignItems: "flex-start", mt: 0.25, ml: 0 }}
               control={
                 <Checkbox
-                  checked={termsAccepted}
-                  onChange={(e) => setTermsAccepted(e.target.checked)}
+                  {...register("termsAccepted")}
+                  defaultChecked
                   sx={{ p: 0, mr: 1.25, mt: 0.25, color: "borderStrong" }}
                 />
               }
@@ -329,6 +347,11 @@ export default function SignUpPage() {
                 </Typography>
               }
             />
+            {errors.termsAccepted && (
+              <Typography sx={{ fontSize: 12, color: "statusError.main", mt: -1.25 }}>
+                {errors.termsAccepted.message}
+              </Typography>
+            )}
 
             <Button
               type="submit"

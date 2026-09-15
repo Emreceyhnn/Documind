@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Alert,
   Box,
@@ -12,31 +12,43 @@ import {
   useTheme,
 } from "@mui/material";
 import { useTranslations } from "next-intl";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useRouter } from "@/i18n/navigation";
 import AuthShell from "@/app/components/AuthShell";
 import { useAuth } from "@/app/lib/hooks/useAuth";
+import { buildSignInSchema, type SignInFormValues } from "@/app/lib/validation/auth";
+import { translateServerMessage } from "@/app/lib/api/errorMessages";
 
 export default function SignInPage() {
   const t = useTranslations("SignIn");
+  const tErrors = useTranslations("Errors");
   const router = useRouter();
   const { login, status } = useAuth();
   const theme = useTheme();
 
   const [ssoOpen, setSsoOpen] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const schema = useMemo(() => buildSignInSchema(tErrors), [tErrors]);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInFormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: { email: "", password: "" },
+  });
 
   const isLoading = status === "loading";
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    const result = await login(email, password);
+  async function onSubmit(values: SignInFormValues) {
+    setFormError(null);
+    const result = await login(values.email, values.password);
     if (result.success) {
       router.push("/docs");
     } else {
-      setError(result.message);
+      setFormError(translateServerMessage(result.message, tErrors));
     }
   }
 
@@ -68,19 +80,19 @@ export default function SignInPage() {
           {t("subtitle")}
         </Typography>
 
-        <Box component="form" onSubmit={handleSubmit}>
+        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={2.25}>
-            {error && <Alert severity="error">{error}</Alert>}
+            {formError && <Alert severity="error">{formError}</Alert>}
 
             <TextField
               type="email"
               label={t("emailLabel")}
               placeholder={t("emailPlaceholder")}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
               fullWidth
+              error={!!errors.email}
+              helperText={errors.email?.message}
               slotProps={{ inputLabel: { shrink: true } }}
+              {...register("email")}
             />
 
             <Box>
@@ -116,10 +128,10 @@ export default function SignInPage() {
               <TextField
                 type="password"
                 placeholder={t("passwordPlaceholder")}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
                 fullWidth
+                error={!!errors.password}
+                helperText={errors.password?.message}
+                {...register("password")}
               />
             </Box>
 

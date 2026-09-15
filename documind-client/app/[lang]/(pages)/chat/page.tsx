@@ -168,8 +168,13 @@ export default function ChatPage() {
                 disabled={sending}
                 onChange={(e) => setDraft(e.target.value)}
                 onKeyDown={handleKeyDown}
-                slotProps={{ input: { disableUnderline: true } }}
-                sx={{ flex: 1, py: 1.25 }}
+                slotProps={{
+                  input: {
+                    disableUnderline: true,
+                    sx: { alignItems: "center", py: 0.5 },
+                  },
+                }}
+                sx={{ flex: 1 }}
               />
               <Box
                 component="button"
@@ -180,11 +185,12 @@ export default function ChatPage() {
                   fontFamily: "inherit",
                   fontSize: 14,
                   fontWeight: 600,
+                  lineHeight: 1,
                   color: "primary.contrastText",
                   bgcolor: "primary.main",
                   border: 0,
                   px: 2.5,
-                  py: 1.375,
+                  height: 40,
                   borderRadius: "8px",
                   cursor: canSend ? "pointer" : "default",
                   opacity: canSend ? 1 : 0.45,

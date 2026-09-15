@@ -47,21 +47,25 @@ export default function DocsPage() {
       <Sidebar />
 
       <Stack sx={{ flex: 1, minWidth: 0 }}>
-        <Stack
-          direction="row"
-          spacing={2}
+        <Box
           sx={{
-            alignItems: "center",
-            justifyContent: "space-between",
-            px: 4,
-            py: 2.25,
             bgcolor: "background.paper",
             borderBottom: "1px solid",
             borderColor: "divider",
             boxShadow: "0 1px 3px rgba(15,18,34,0.05)",
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              alignItems: "center",
+              px: 4,
+              py: 2.25,
+              maxWidth: 1000,
+              mx: "auto",
+            }}
+          >
             <Logo size="small" color="dark" clickable />
             <Box sx={{ height: 22, width: 1, bgcolor: "divider" }} />
             <Box>
@@ -72,10 +76,10 @@ export default function DocsPage() {
                 {t("subtitle")}
               </Typography>
             </Box>
-          </Box>
-        </Stack>
+          </Stack>
+        </Box>
 
-        <Box sx={{ flex: 1, px: 4, pt: 3.5, pb: 12, maxWidth: 1000, width: "100%" }}>
+        <Box sx={{ flex: 1, px: 4, pt: 3.5, pb: 12, maxWidth: 1000, width: "100%", mx: "auto" }}>
           <input
             ref={inputRef}
             type="file"

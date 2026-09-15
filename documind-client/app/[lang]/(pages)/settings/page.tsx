@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Alert,
   Box,
@@ -13,6 +13,8 @@ import {
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useTranslations } from "next-intl";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "@/i18n/navigation";
 import Sidebar from "@/app/components/Sidebar";
 import Logo from "@/app/components/Logo";
@@ -20,14 +22,20 @@ import LanguageSwitcher from "@/app/components/LanguageSwitcher";
 import { useAuth } from "@/app/lib/hooks/useAuth";
 import { updateUser, deleteUser } from "@/app/lib/api/auth";
 import { addCompanyMember } from "@/app/lib/api/company";
+import {
+  buildProfileSchema,
+  buildInviteSchema,
+  type ProfileFormValues,
+  type InviteFormValues,
+} from "@/app/lib/validation/auth";
+import { translateServerMessage } from "@/app/lib/api/errorMessages";
 
 export default function SettingsPage() {
   const t = useTranslations("Settings");
+  const tErrors = useTranslations("Errors");
   const router = useRouter();
   const { user } = useAuth();
 
-  const [name, setName] = useState(user?.name ?? "");
-  const [surname, setSurname] = useState(user?.surname ?? "");
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -35,29 +43,49 @@ export default function SettingsPage() {
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
-  const [memberEmail, setMemberEmail] = useState("");
   const [inviting, setInviting] = useState(false);
   const [inviteError, setInviteError] = useState<string | null>(null);
   const [inviteSuccess, setInviteSuccess] = useState(false);
   const [companyIdCopied, setCompanyIdCopied] = useState(false);
 
-  async function handleSave(e: React.FormEvent) {
-    e.preventDefault();
+  const profileSchema = useMemo(() => buildProfileSchema(tErrors), [tErrors]);
+  const {
+    register: registerProfile,
+    handleSubmit: handleProfileSubmit,
+    formState: { errors: profileErrors },
+  } = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: { name: user?.name ?? "", surname: user?.surname ?? "" },
+  });
+
+  const inviteSchema = useMemo(() => buildInviteSchema(tErrors), [tErrors]);
+  const {
+    register: registerInvite,
+    handleSubmit: handleInviteSubmit,
+    reset: resetInvite,
+    formState: { errors: inviteErrors },
+  } = useForm<InviteFormValues>({
+    resolver: zodResolver(inviteSchema),
+    defaultValues: { memberEmail: "" },
+  });
+
+  async function onSaveProfile(values: ProfileFormValues) {
     setSaveError(null);
     setSaveSuccess(false);
     setSaving(true);
     try {
-      await updateUser({ name, surname });
+      await updateUser(values);
       setSaveSuccess(true);
     } catch (err) {
-      setSaveError(err instanceof Error ? err.message : t("saveError"));
+      setSaveError(
+        err instanceof Error ? translateServerMessage(err.message, tErrors) : t("saveError")
+      );
     } finally {
       setSaving(false);
     }
   }
 
-  async function handleInvite(e: React.FormEvent) {
-    e.preventDefault();
+  async function onInvite(values: InviteFormValues) {
     setInviteError(null);
     setInviteSuccess(false);
 
@@ -68,11 +96,13 @@ export default function SettingsPage() {
 
     setInviting(true);
     try {
-      await addCompanyMember({ companyId: user.companyId, userEmail: memberEmail.trim() });
+      await addCompanyMember({ companyId: user.companyId, userEmail: values.memberEmail.trim() });
       setInviteSuccess(true);
-      setMemberEmail("");
+      resetInvite();
     } catch (err) {
-      setInviteError(err instanceof Error ? err.message : t("teamInviteError"));
+      setInviteError(
+        err instanceof Error ? translateServerMessage(err.message, tErrors) : t("teamInviteError")
+      );
     } finally {
       setInviting(false);
     }
@@ -95,7 +125,9 @@ export default function SettingsPage() {
       await deleteUser();
       router.push("/auth/sign-in");
     } catch (err) {
-      setDeleteError(err instanceof Error ? err.message : t("deleteError"));
+      setDeleteError(
+        err instanceof Error ? translateServerMessage(err.message, tErrors) : t("deleteError")
+      );
       setDeleting(false);
     }
   }
@@ -105,21 +137,25 @@ export default function SettingsPage() {
       <Sidebar />
 
       <Stack sx={{ flex: 1, minWidth: 0 }}>
-        <Stack
-          direction="row"
-          spacing={2}
+        <Box
           sx={{
-            alignItems: "center",
-            justifyContent: "space-between",
-            px: 4,
-            py: 2.25,
             bgcolor: "background.paper",
             borderBottom: "1px solid",
             borderColor: "divider",
             boxShadow: "0 1px 3px rgba(15,18,34,0.05)",
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              alignItems: "center",
+              px: 4,
+              py: 2.25,
+              maxWidth: 640,
+              mx: "auto",
+            }}
+          >
             <Logo size="small" color="dark" clickable />
             <Box sx={{ height: 22, width: 1, bgcolor: "divider" }} />
             <Box>
@@ -130,13 +166,14 @@ export default function SettingsPage() {
                 {t("subtitle")}
               </Typography>
             </Box>
-          </Box>
-        </Stack>
+          </Stack>
+        </Box>
 
-        <Box sx={{ flex: 1, px: 4, pt: 3.5, pb: 12, maxWidth: 640, width: "100%" }}>
+        <Box sx={{ flex: 1, px: 4, pt: 3.5, pb: 12, maxWidth: 640, width: "100%", mx: "auto" }}>
           <Box
             component="form"
-            onSubmit={handleSave}
+            noValidate
+            onSubmit={handleProfileSubmit(onSaveProfile)}
             sx={{
               bgcolor: "background.paper",
               border: "1px solid",
@@ -156,19 +193,19 @@ export default function SettingsPage() {
 
               <TextField
                 label={t("nameLabel")}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
                 fullWidth
+                error={!!profileErrors.name}
+                helperText={profileErrors.name?.message}
                 slotProps={{ inputLabel: { shrink: true } }}
+                {...registerProfile("name")}
               />
               <TextField
                 label={t("surnameLabel")}
-                value={surname}
-                onChange={(e) => setSurname(e.target.value)}
-                required
                 fullWidth
+                error={!!profileErrors.surname}
+                helperText={profileErrors.surname?.message}
                 slotProps={{ inputLabel: { shrink: true } }}
+                {...registerProfile("surname")}
               />
               <TextField
                 label={t("emailLabel")}
@@ -234,7 +271,8 @@ export default function SettingsPage() {
 
               <Box
                 component="form"
-                onSubmit={handleInvite}
+                noValidate
+                onSubmit={handleInviteSubmit(onInvite)}
                 sx={{ pt: 1, borderTop: "1px solid", borderColor: "divider" }}
               >
                 <Typography sx={{ fontSize: 13, fontWeight: 600, mb: 1.25 }}>
@@ -252,17 +290,17 @@ export default function SettingsPage() {
                   </Alert>
                 )}
 
-                <Stack direction="row" spacing={1.25}>
+                <Stack direction="row" spacing={1.25} sx={{ alignItems: "flex-start" }}>
                   <TextField
                     type="email"
                     placeholder={t("teamInviteEmailPlaceholder")}
-                    value={memberEmail}
-                    onChange={(e) => setMemberEmail(e.target.value)}
-                    required
+                    error={!!inviteErrors.memberEmail}
+                    helperText={inviteErrors.memberEmail?.message}
                     fullWidth
                     size="small"
+                    {...registerInvite("memberEmail")}
                   />
-                  <Button type="submit" variant="contained" loading={inviting} sx={{ px: 2.5 }}>
+                  <Button type="submit" variant="contained" loading={inviting} sx={{ px: 2.5, flexShrink: 0 }}>
                     {t("teamInviteSubmit")}
                   </Button>
                 </Stack>
