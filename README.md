@@ -26,6 +26,28 @@ Client (Next.js) ─┐
                    └────────────────────────────────────────────┴─▶ Postgres (pgvector) / MinIO
 ```
 
+## Technical decisions
+
+**Why separate Document.Service and RAG.service instead of one monolith
+handling uploads and embeddings?** Document storage and RAG are different
+workloads with different scaling needs — uploads are I/O-bound and bursty,
+embedding/chunking is CPU-bound and can run behind a queue. Splitting them
+lets each service scale independently and keeps the RAG service's pgvector
+and Gemini dependencies out of the upload path entirely.
+
+**Why gRPC between Document.Service and RAG.service instead of REST?** This
+is internal service-to-service traffic with a well-defined, stable contract
+(send a document, get back chunks/embeddings) — gRPC's binary protocol and
+generated clients are a better fit here than JSON-over-HTTP, which is
+reserved for the public-facing APIs behind Nginx.
+
+**Why pgvector instead of a dedicated vector database?** The relational data
+(users, documents, companies) and the vector embeddings are both queried
+together in most RAG lookups. Keeping embeddings in the same Postgres
+instance avoids a second database to operate and keeps document metadata and
+its vectors transactionally consistent, at the cost of some of the
+raw query throughput a dedicated vector DB would offer at much larger scale.
+
 ## Prerequisites
 
 - Docker & Docker Compose
