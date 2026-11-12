@@ -1,8 +1,29 @@
 # DocuMind
 
-DocuMind is a microservices-based document management and Retrieval-Augmented Generation (RAG) platform. Users can upload documents, have them chunked and embedded automatically, and then ask natural-language questions answered by an LLM grounded in their own document content.
+[![.NET 10](https://img.shields.io/badge/.NET-10-512BD4)](https://dotnet.microsoft.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-15-000000)](https://nextjs.org/)
+[![PostgreSQL + pgvector](https://img.shields.io/badge/PostgreSQL-pgvector-4169E1)](https://github.com/pgvector/pgvector)
+[![gRPC](https://img.shields.io/badge/gRPC-service--to--service-244c5a)](https://grpc.io/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
+**Live demo:** https://documind.emreceyhan.xyz
+
+DocuMind is a microservices-based document management and Retrieval-Augmented Generation (RAG) platform. Upload documents, they get chunked and embedded automatically, then ask natural-language questions answered by an LLM grounded in your own content — with a citation back to the source chunk.
 
 ## Architecture
+
+```mermaid
+flowchart LR
+    U[Browser] --> N[Nginx]
+    N --> C[Next.js client]
+    N --> A[Auth.Service]
+    N --> D[Document.Service]
+    D -- gRPC --> R[RAG.service]
+    R --> G[Gemini API]
+    R --> P[(PostgreSQL<br/>pgvector)]
+    D --> M[(MinIO)]
+    A --> P
+```
 
 The system is composed of four backend services, a web client, and a reverse proxy, all orchestrated via Docker Compose:
 
@@ -17,14 +38,6 @@ The system is composed of four backend services, a web client, and a reverse pro
 Supporting infrastructure:
 - **PostgreSQL** (`pgvector/pgvector`) — relational storage + vector similarity search
 - **MinIO** — S3-compatible object storage for uploaded documents
-
-```
-Client (Next.js) ─┐
-                   ├─▶ Nginx ─▶ Auth.Service
-                   │            Document.Service ─▶ gRPC ─▶ RAG.service ─▶ Gemini API
-                   │                                            │
-                   └────────────────────────────────────────────┴─▶ Postgres (pgvector) / MinIO
-```
 
 ## Technical decisions
 
