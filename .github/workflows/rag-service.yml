@@ -21,13 +21,16 @@ jobs:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
 
       - name: Restore dependencies
         run: dotnet restore RAG.service/RAG.service.csproj
 
       - name: Build RAG Service
         run: dotnet build RAG.service/RAG.service.csproj --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test RAG.service.Test/RAG.service.Test.csproj --verbosity normal
 
   publish-and-deploy:
     name: Docker Publish & Deploy to VPS
