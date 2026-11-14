@@ -5,10 +5,14 @@ on:
     branches: [ main, master ]
     paths:
       - 'RAG.service/**'
+      - 'RAG.service.Test/**'
+      - '.github/workflows/rag-service.yml'
   pull_request:
     branches: [ main, master ]
     paths:
       - 'RAG.service/**'
+      - 'RAG.service.Test/**'
+      - '.github/workflows/rag-service.yml'
 
 jobs:
   build:
