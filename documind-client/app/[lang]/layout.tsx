@@ -9,6 +9,7 @@ import { routing } from "@/i18n/routing";
 import { getCurrentUser } from "../lib/api/auth";
 import AuthContextProvider from "../lib/auth/AuthContext";
 import MuiThemeProvider from "../components/MuiThemeProvider";
+import { SITE_URL } from "../lib/site";
 import "../styles/globals.css";
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -24,9 +25,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-  ),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "DocuMind | Yapay Zeka Destekli Doküman Analiz ve Soru-Cevap",
     template: "%s | DocuMind",
@@ -64,13 +63,12 @@ export const metadata: Metadata = {
     title: "DocuMind - Yapay Zeka Destekli Doküman Analiz Platformu",
     description:
       "Dokümanlarınızla sohbet edin, yapay zeka ile anında yanıtlar ve tam kaynak gösterimleri alın.",
-    url: "https://documind.app",
     siteName: "DocuMind",
     images: [
       {
         url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
+        width: 1376,
+        height: 768,
         alt: "DocuMind AI Document Analysis & Chat",
       },
     ],

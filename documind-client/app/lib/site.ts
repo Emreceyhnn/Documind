@@ -14,15 +14,15 @@ export const SITE_URL = (
 type ChangeFrequency = "weekly" | "monthly" | "yearly";
 
 /**
- * Public, indexable pages (locale-less paths). Only list URLs that answer 200:
- * `/[lang]` itself just redirects to sign-in, so it is intentionally absent.
- * Add the locale root here once a real landing page replaces that redirect.
+ * Public, indexable pages (locale-less paths; "" is the localized landing
+ * page). Only list URLs that answer 200 rather than redirect.
  */
 export const PUBLIC_PAGES: ReadonlyArray<{
   path: string;
   priority: number;
   changeFrequency: ChangeFrequency;
 }> = [
+  { path: "", priority: 1, changeFrequency: "weekly" },
   { path: "/auth/sign-up", priority: 0.8, changeFrequency: "monthly" },
   { path: "/auth/sign-in", priority: 0.6, changeFrequency: "monthly" },
   { path: "/legal/privacy", priority: 0.3, changeFrequency: "yearly" },

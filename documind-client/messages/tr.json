@@ -223,5 +223,137 @@
     "teamMissingCompanyError": "Şirket bilginiz bulunamadı.",
     "languageHeading": "Dil Tercihi",
     "languageSubtitle": "Uygulama arayüz dilini değiştirmek için tercih ettiğiniz dili seçin."
+  },
+  "Landing": {
+    "meta": {
+      "title": "DocuMind — Dokümanlarınızla Sohbet Edin, Kaynaklı Yanıt Alın",
+      "description": "PDF ve Word dosyalarınızı yükleyin, doğal dille soru sorun; yalnızca kendi dokümanlarınıza dayanan, sayfa referanslı yanıtlar alın. Açık kaynaklı RAG platformu.",
+      "ogImageAlt": "DocuMind — Kaynaklı yanıtlar veren yapay zeka doküman soru-cevap platformu"
+    },
+    "nav": {
+      "skip": "İçeriğe geç",
+      "primary": "Ana menü",
+      "howItWorks": "Nasıl çalışır",
+      "features": "Özellikler",
+      "faq": "SSS",
+      "logIn": "Giriş yap",
+      "getStarted": "Hemen başla",
+      "openApp": "DocuMind'ı aç"
+    },
+    "hero": {
+      "eyebrow": "Açık kaynaklı doküman soru-cevap",
+      "title": "Dokümanlarınıza sorun. <em>Kanıtlı</em> yanıt alın.",
+      "subtitle": "PDF ve Word dosyalarınızı yükleyin, doğal dille soru sorun. Yanıtlar yalnızca kendi içeriğinize dayanır ve her biri doğrulayabileceğiniz bir sayfa referansı taşır.",
+      "primaryCta": "Hemen başla",
+      "secondaryCta": "Nasıl çalıştığını gör",
+      "note": "PDF ve DOCX · dosya başına 50 MB'a kadar · Türkçe ve İngilizce arayüz"
+    },
+    "preview": {
+      "caption": "Örnek: yüklenen bir sözleşmeden yanıtlanan soru",
+      "docName": "Hizmet_Sozlesmesi_2024.pdf",
+      "docPage": "Sayfa 12",
+      "docHeading": "8.2 Fesih",
+      "docBefore": "Taraflardan her biri, diğer tarafa ",
+      "docHighlight": "doksan (90) gün önceden yazılı bildirim",
+      "docAfter": " vererek sözleşmeyi herhangi bir gerekçe göstermeden feshedebilir. Fesih, tahakkuk etmiş ücretleri etkilemez.",
+      "status": "Hazır",
+      "question": "Sözleşmeyi feshetmek istersek ihbar süresi ne kadar?",
+      "answer": "Taraflardan her biri, 90 gün önceden yazılı bildirimle sözleşmeyi feshedebilir. Tahakkuk etmiş ücretler ödenmeye devam eder.",
+      "sourceLabel": "Kaynak",
+      "sourcePage": "s. 12"
+    },
+    "how": {
+      "title": "Dosyadan kaynaklı yanıta üç adımda",
+      "subtitle": "Kurmanız gereken bir altyapı yok. Yükleyin, birkaç dakika bekleyin, sorun.",
+      "steps": {
+        "upload": {
+          "title": "Dokümanlarınızı yükleyin",
+          "body": "PDF veya Word dosyalarını sürükleyip bırakın (dosya başına 50 MB'a kadar). Her dosya net bir durumla izlenir: İşleniyor, Hazır veya Hata."
+        },
+        "index": {
+          "title": "Otomatik olarak indekslenir",
+          "body": "DocuMind her dokümanı parçalara böler ve embedding'lere dönüştürür; böylece doğru bölümler yalnızca anahtar kelimeyle değil, anlamla bulunur."
+        },
+        "ask": {
+          "title": "Sorun ve doğrulayın",
+          "body": "Doğal dille sorun. Yanıt dokümanlarınızdan üretilir ve kaynak bölümü ile sayfayı gösterir."
+        }
+      }
+    },
+    "features": {
+      "title": "Güvenebileceğiniz yanıtlar için tasarlandı",
+      "subtitle": "Her tasarım kararı, kendinden emin tahminler yerine doğrulanabilir yanıtları öne çıkarır.",
+      "items": {
+        "cited": {
+          "title": "Sayfa düzeyinde kaynak",
+          "body": "Her yanıt kaynak bölüme ve sayfaya bağlanır; saniyeler içinde kontrol edebilirsiniz."
+        },
+        "grounded": {
+          "title": "Yalnızca sizin içeriğinize dayanır",
+          "body": "Yanıtlar sadece yüklediğiniz dokümanlardan üretilir, internetten değil."
+        },
+        "semantic": {
+          "title": "Anlama göre arama",
+          "body": "Vektör arama, sorunuz dokümandakinden farklı kelimeler kullansa bile ilgili bölümleri bulur."
+        },
+        "team": {
+          "title": "Ortak ekip çalışma alanı",
+          "body": "Bir şirket hesabı oluşturun, ekibinizi ekleyin ve aynı doküman kütüphanesinden çalışın."
+        },
+        "bilingual": {
+          "title": "Türkçe ve İngilizce arayüz",
+          "body": "Tüm uygulamayı istediğiniz an Türkçe ve English arasında değiştirin."
+        },
+        "selfhost": {
+          "title": "Açık kaynak, kendi sunucunuzda",
+          "body": "MIT lisanslı. Tüm yığını tek bir Docker Compose komutuyla kendi sunucunuzda çalıştırın."
+        }
+      }
+    },
+    "tech": {
+      "title": "Kaputun altında",
+      "body": "Gerçek iş yükleri için tasarlanmış mikroservis mimarisi: yükleme ve embedding işlemleri bağımsız ölçeklenir, servisler birbiriyle gRPC üzerinden konuşur.",
+      "listLabel": "Teknoloji yığını",
+      "cta": "Kaynak kodu GitHub'da incele"
+    },
+    "faq": {
+      "title": "Sıkça sorulan sorular",
+      "items": {
+        "fileTypes": {
+          "q": "Hangi dosya türlerini yükleyebilirim?",
+          "a": "PDF ve Word (DOCX) dosyaları, dosya başına 50 MB'a kadar."
+        },
+        "sources": {
+          "q": "Yanıtlar nereden geliyor?",
+          "a": "Yalnızca yüklediğiniz dokümanlardan. DocuMind en alakalı bölümleri getirir, yanıtı bunlardan üretir ve kaynak sayfaya referans verir."
+        },
+        "indexing": {
+          "q": "İndeksleme ne kadar sürer?",
+          "a": "Genellikle doküman boyutuna göre birkaç dakika. Her dosyanın durumu (İşleniyor, Hazır, Hata) görünür; hazır olunca sohbet kaynağı olur."
+        },
+        "openSource": {
+          "q": "DocuMind açık kaynak mı?",
+          "a": "Evet. MIT lisansıyla yayımlanır ve tüm platformu Docker Compose ile kendi sunucunuzda çalıştırabilirsiniz."
+        },
+        "stack": {
+          "q": "Hangi teknolojileri kullanıyor?",
+          "a": "ASP.NET Core servisleri, benzerlik araması için pgvector'lü PostgreSQL, servisler arası gRPC, dosya depolama için MinIO, yanıt üretimi için Google Gemini ve bir Next.js web istemcisi."
+        }
+      }
+    },
+    "cta": {
+      "title": "İlk sorunuzu dakikalar içinde sorun",
+      "body": "Hesap oluşturun, bir doküman yükleyin ve kaynaklı yanıt alın.",
+      "primary": "Hemen başla",
+      "secondary": "Giriş yap"
+    },
+    "footer": {
+      "tagline": "Kaynaklı yanıtlar veren açık kaynaklı doküman soru-cevap platformu.",
+      "product": "Ürün",
+      "legal": "Yasal",
+      "github": "GitHub",
+      "license": "MIT lisanslı",
+      "rights": "© {year} DocuMind"
+    }
   }
 }

@@ -17,3 +17,42 @@ body {
 button {
   cursor: pointer;
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* The reset above removes every outline; restore a visible focus ring on the
+   public landing page so keyboard users can see where they are. */
+.landing a:focus-visible,
+.landing button:focus-visible,
+.landing summary:focus-visible,
+.landing [tabindex]:focus-visible {
+  outline: 2px solid var(--mui-palette-primary-main);
+  outline-offset: 3px;
+}
+
+.landing main:focus {
+  outline: none;
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -64px;
+  z-index: 200;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+  top: 12px;
+}
