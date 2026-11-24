@@ -19,7 +19,7 @@ export default function LegalPage({ namespace }: LegalPageProps) {
           </Link>
         </Box>
 
-        <Typography sx={{ fontSize: 24, fontWeight: 600, letterSpacing: "-0.01em", mb: 1.5 }}>
+        <Typography component="h1" sx={{ fontSize: 24, fontWeight: 600, letterSpacing: "-0.01em", mb: 1.5 }}>
           {t("title")}
         </Typography>
         <Typography sx={{ fontSize: 13, color: "text.disabled", mb: 3.5 }}>
