@@ -223,5 +223,137 @@
     "teamMissingCompanyError": "Your company information could not be found.",
     "languageHeading": "Language Preference",
     "languageSubtitle": "Select your preferred language to change the interface language."
+  },
+  "Landing": {
+    "meta": {
+      "title": "DocuMind — Chat with Your Documents, Get Cited AI Answers",
+      "description": "Upload PDF and Word files, ask questions in plain language and get answers grounded in your documents, with page citations. Open-source RAG platform.",
+      "ogImageAlt": "DocuMind — AI document Q&A with cited answers"
+    },
+    "nav": {
+      "skip": "Skip to content",
+      "primary": "Primary",
+      "howItWorks": "How it works",
+      "features": "Features",
+      "faq": "FAQ",
+      "logIn": "Log in",
+      "getStarted": "Get started",
+      "openApp": "Open DocuMind"
+    },
+    "hero": {
+      "eyebrow": "Open-source document Q&A",
+      "title": "Ask your documents. Get answers with <em>proof</em>.",
+      "subtitle": "Upload PDF and Word files, ask questions in plain language, and get answers grounded only in your own content — every one with a page reference you can check.",
+      "primaryCta": "Get started",
+      "secondaryCta": "See how it works",
+      "note": "PDF & DOCX · up to 50 MB per file · English & Turkish interface"
+    },
+    "preview": {
+      "caption": "Example: a question answered from an uploaded contract",
+      "docName": "MSA_Acme_2024.pdf",
+      "docPage": "Page 12",
+      "docHeading": "8.2 Termination",
+      "docBefore": "Either party may terminate this Agreement for convenience by giving the other party ",
+      "docHighlight": "ninety (90) days' written notice",
+      "docAfter": ". Termination does not affect fees already accrued.",
+      "status": "Ready",
+      "question": "What notice period applies if we want to terminate the contract?",
+      "answer": "Either party can terminate for convenience with 90 days' written notice. Fees already accrued stay payable.",
+      "sourceLabel": "Source",
+      "sourcePage": "p. 12"
+    },
+    "how": {
+      "title": "From files to cited answers in three steps",
+      "subtitle": "No pipelines to build. Upload, wait a few minutes, ask.",
+      "steps": {
+        "upload": {
+          "title": "Upload your documents",
+          "body": "Drag in PDF or Word files, up to 50 MB each. Every file is tracked with a clear status: Processing, Ready or Error."
+        },
+        "index": {
+          "title": "They are indexed automatically",
+          "body": "DocuMind splits each document into chunks and turns them into embeddings, so the right passages are found by meaning, not just keywords."
+        },
+        "ask": {
+          "title": "Ask and verify",
+          "body": "Ask in natural language. The answer is generated from your documents and points to the exact source excerpt and page."
+        }
+      }
+    },
+    "features": {
+      "title": "Built for answers you can trust",
+      "subtitle": "Every design choice favors verifiable answers over confident guesses.",
+      "items": {
+        "cited": {
+          "title": "Page-level citations",
+          "body": "Each answer links back to the source excerpt and page, so you can check it in seconds."
+        },
+        "grounded": {
+          "title": "Grounded in your content",
+          "body": "Answers are generated only from the documents you upload, not from the open internet."
+        },
+        "semantic": {
+          "title": "Search by meaning",
+          "body": "Vector search finds relevant passages even when your question uses different words than the document."
+        },
+        "team": {
+          "title": "Shared team workspace",
+          "body": "Create a company account, add your teammates and work from the same document library."
+        },
+        "bilingual": {
+          "title": "English & Turkish interface",
+          "body": "Switch the whole app between English and Türkçe at any time."
+        },
+        "selfhost": {
+          "title": "Open source & self-hostable",
+          "body": "MIT-licensed. Run the full stack on your own server with a single Docker Compose command."
+        }
+      }
+    },
+    "tech": {
+      "title": "Under the hood",
+      "body": "A microservices architecture built for real workloads: uploads and embeddings scale independently, and services talk to each other over gRPC.",
+      "listLabel": "Technology stack",
+      "cta": "View the source on GitHub"
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "items": {
+        "fileTypes": {
+          "q": "What file types can I upload?",
+          "a": "PDF and Word (DOCX) files, up to 50 MB per file."
+        },
+        "sources": {
+          "q": "Where do the answers come from?",
+          "a": "Only from the documents you uploaded. DocuMind retrieves the most relevant excerpts, generates an answer from them and references the source page."
+        },
+        "indexing": {
+          "q": "How long does indexing take?",
+          "a": "Usually a few minutes, depending on document size. Each file shows its status — Processing, Ready or Error — and becomes a chat source once it is ready."
+        },
+        "openSource": {
+          "q": "Is DocuMind open source?",
+          "a": "Yes. It is released under the MIT license, and you can self-host the whole platform with Docker Compose."
+        },
+        "stack": {
+          "q": "Which technologies does it use?",
+          "a": "ASP.NET Core services, PostgreSQL with pgvector for similarity search, gRPC between services, MinIO for file storage, Google Gemini for generation and a Next.js web client."
+        }
+      }
+    },
+    "cta": {
+      "title": "Ask your first question in minutes",
+      "body": "Create an account, upload a document and get a cited answer.",
+      "primary": "Get started",
+      "secondary": "Log in"
+    },
+    "footer": {
+      "tagline": "Open-source document Q&A with cited answers.",
+      "product": "Product",
+      "legal": "Legal",
+      "github": "GitHub",
+      "license": "MIT licensed",
+      "rights": "© {year} DocuMind"
+    }
   }
 }
