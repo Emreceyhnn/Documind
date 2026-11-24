@@ -313,10 +313,12 @@ export function HowItWorks() {
                   aria-hidden
                   sx={{
                     fontFamily: mono,
-                    fontSize: 34,
+                    fontSize: 30,
                     fontWeight: 500,
                     lineHeight: 1,
-                    color: "borderStrong",
+                    // Large text needs 3:1; the primary color clears it in
+                    // both light and dark mode.
+                    color: "primary.main",
                   }}
                 >
                   {String(index + 1).padStart(2, "0")}
