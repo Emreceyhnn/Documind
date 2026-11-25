@@ -3,6 +3,7 @@ import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
+import Script from "next/script";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import { routing } from "@/i18n/routing";
@@ -145,6 +146,16 @@ export default async function RootLayout({
             </MuiThemeProvider>
           </AppRouterCacheProvider>
         </NextIntlClientProvider>
+        {process.env.NODE_ENV === "production" && (
+          // Cloudflare Web Analytics (cookieless, no personal data).
+          <Script
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            strategy="afterInteractive"
+            data-cf-beacon={JSON.stringify({
+              token: "d140131db31f49bfaab2073578e9b71c",
+            })}
+          />
+        )}
       </body>
     </html>
   );
